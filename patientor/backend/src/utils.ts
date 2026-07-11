@@ -1,12 +1,24 @@
 
-import type { NewPatientEntry } from "./types.ts";
+import type { NewPatientEntry, Gender } from "./types.ts";
+import { GenderObject } from "./types.ts";
+
 
 const isString = (str: unknown): str is string => {
   return typeof str === "string";
 };
 
-const isDate = (str:string):boolean => {
-   return Boolean(Date.parse(str))
+const isDate = (date:string):boolean => {
+   return Boolean(Date.parse(date))
+}
+
+const isGender = (gender:string):gender is Gender => {
+  return (Object.values(GenderObject) as string[]).includes(gender)
+}
+const parseGender = (gender:unknown):Gender => {
+  if(!isString (gender)|| !isGender(gender)){
+    throw new Error("Incorrect or missing gender content "+gender);
+  }
+  return gender
 }
 
 const parseDate=(str:unknown):string=>{
@@ -38,7 +50,7 @@ export const parsePatientEntry = (entry: unknown): NewPatientEntry => {
         dateOfBirth: parseDate(entry.dateOfBirth),
         ssn: parseEntry(entry.ssn),
         occupation: parseEntry(entry.occupation),
-        gender: parseEntry(entry.gender),
+        gender: parseGender(entry.gender),
     };
     return newEntry;
   }
