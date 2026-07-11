@@ -1,10 +1,22 @@
+
 import type { NewPatientEntry } from "./types.ts";
 
 const isString = (str: unknown): str is string => {
   return typeof str === "string";
 };
+
+const isDate = (str:string):boolean => {
+   return Boolean(Date.parse(str))
+}
+
+const parseDate=(str:unknown):string=>{
+  if(!isString(str) || !isDate(str)){
+    throw new Error("Incorrect or missing date content");
+  }
+  return str
+}
 const parseEntry = (str: unknown): string => {
-  if (!str || !isString(str)) {
+  if (!isString(str)) {
     throw new Error("Incorrect or missing content");
   }
   return str;
@@ -23,7 +35,7 @@ export const parsePatientEntry = (entry: unknown): NewPatientEntry => {
   ) {
       const newEntry: NewPatientEntry = {
         name: parseEntry(entry.name),
-        dateOfBirth: parseEntry(entry.dateOfBirth),
+        dateOfBirth: parseDate(entry.dateOfBirth),
         ssn: parseEntry(entry.ssn),
         occupation: parseEntry(entry.occupation),
         gender: parseEntry(entry.gender),
