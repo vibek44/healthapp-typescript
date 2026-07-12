@@ -1,7 +1,9 @@
 import express from "express";
 import patientsService from "../services/patientService.ts";
 import { parsePatientEntry } from "../utils.ts";
-import type { NewPatientEntry } from "../types.ts";
+ import type{ NewPatientEntry } from "../types.ts";
+import z from "zod";
+ 
 
 const patientsRouter = express.Router();
 
@@ -17,6 +19,8 @@ patientsRouter.post("/", (req, res) => {
   } catch (error) {
     if (error instanceof Error) {
       res.json({ error: error.message });
+    }else if(error instanceof z.ZodError){
+      res.status(400).send({error:error.issues})
     }
   }
 });
