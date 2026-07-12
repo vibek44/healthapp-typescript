@@ -1,8 +1,8 @@
 
-import type { NewPatientEntry, Gender } from "./types.ts";
-import { GenderObject } from "./types.ts";
+import type { NewPatientEntry,} from "./types.ts";
+import {NewEntrySchema } from "./types.ts";
 
-
+/*
 const isString = (str: unknown): str is string => {
   return typeof str === "string";
 };
@@ -33,26 +33,8 @@ const parseEntry = (str: unknown): string => {
   }
   return str;
 };
-
+*/
 export const parsePatientEntry = (entry: unknown): NewPatientEntry => {
-  if (!entry || typeof entry !== "object") {
-    throw new Error("Incorrect or missing data");
-  }
-  if (
-    "name" in entry &&
-    "occupation" in entry &&
-    "dateOfBirth" in entry &&
-    "gender" in entry &&
-    "ssn" in entry
-  ) {
-      const newEntry: NewPatientEntry = {
-        name: parseEntry(entry.name),
-        dateOfBirth: parseDate(entry.dateOfBirth),
-        ssn: parseEntry(entry.ssn),
-        occupation: parseEntry(entry.occupation),
-        gender: parseGender(entry.gender),
-    };
-    return newEntry;
-  }
-  throw new Error("Incorrect data: some fields are missing");
+    return NewEntrySchema.parse(entry);
+ 
 };
