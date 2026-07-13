@@ -17,10 +17,10 @@ patientsRouter.post("/", (req, res) => {
     const newEntry = patientsService.addPatientData(parsedEntry);
     res.send(newEntry);
   } catch (error) {
-    if (error instanceof Error) {
-      res.json({ error: error.message });
-    }else if(error instanceof z.ZodError){
-      res.status(400).send({error:error.issues})
+    if (error instanceof z.ZodError) {
+      res.json({ error: error.issues });
+    }else if(error instanceof Error){
+      res.status(400).send({error:error.message})
     }
   }
 });
