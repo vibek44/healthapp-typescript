@@ -1,11 +1,11 @@
 import { z } from "zod"
 
 export const GenderObject={
-  Male:"male",
+  male:"male",
   Female:"female",
   Other:"other"
-}as const 
-// Gender object type is the union of all the propertie's value 
+} as const 
+// Gender  type is the union of all the propertie's value 
 export type Gender=typeof GenderObject[keyof typeof GenderObject]
 
 export const NewEntrySchema=z.object({
@@ -23,8 +23,6 @@ export interface Diagnoses {
 }
 
 //this const object can be used both during compile time and run time
-
-
 export interface Patient extends NewPatientEntry {
   id: string;
  
