@@ -1,7 +1,7 @@
 import { z } from "zod"
 
 export const GenderObject={
-  male:"male",
+  Male:"male",
   Female:"female",
   Other:"other"
 } as const 
@@ -22,6 +22,7 @@ export interface Diagnoses {
   latin?: string;
 }
 
+export type NewPatientEntry = z.infer<typeof NewEntrySchema>
 //this const object can be used both during compile time and run time
 export interface Patient extends NewPatientEntry {
   id: string;
@@ -29,4 +30,3 @@ export interface Patient extends NewPatientEntry {
 }
 
 export type PatientEntry = Omit<Patient, "ssn">;
-export type NewPatientEntry = z.infer<typeof NewEntrySchema>
