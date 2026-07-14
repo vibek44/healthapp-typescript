@@ -1,8 +1,8 @@
 import express from "express";
 import patientsService from "../services/patientService.ts";
-import { parsePatientEntry } from "../utils.ts";
- import type{ NewPatientEntry } from "../types.ts";
-import z from "zod";
+import  { newEntryParser } from "../middleware/entryParser.ts";
+import errorHandler from "../middleware/errorHandler.ts";
+// import type{ NewPatientEntry } from "../types.ts";
  
 
 const patientsRouter = express.Router();
@@ -11,18 +11,14 @@ patientsRouter.get("/", (_req, res) => {
   res.send(patientsService.getPatientData());
 });
 
-patientsRouter.post("/", (req, res) => {
+patientsRouter.post("/",newEntryParser, (req, res,next) => {
   try {
-    const parsedEntry: NewPatientEntry = parsePatientEntry(req.body);
-    const newEntry = patientsService.addPatientData(parsedEntry);
+    const newEntry = patientsService.addPatientData(req.body);
     res.send(newEntry);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.json({ error: error.issues });
-    }else if(error instanceof Error){
-      res.status(400).send({error:error.message})
-    }
+  } catch (error:unknown) {
+    next(error)
   }
 });
 
+ patientsRouter.use(errorHandler)
 export default patientsRouter;
