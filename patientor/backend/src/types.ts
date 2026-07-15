@@ -13,7 +13,7 @@ export const NewEntrySchema=z.object({
   occupation:z.string().min(2),
   dateOfBirth:z.iso.date(),
   gender:z.enum(Object.values(GenderObject)),
-  ssn:z.string().min(9)
+  ssn:z.string().min(9).includes('-')
 })
 
 export interface Diagnoses {
