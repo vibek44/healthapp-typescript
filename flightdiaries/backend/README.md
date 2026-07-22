@@ -1,0 +1,4 @@
+-This is ready made server for frontend flightdiaries
+-The backend and frontend is developed using typescript
+-The aim is to find out how typescript and its features works to make a code which is less error prone especially during runtime
+-typescript typing and its features will be tried to learn in practical terms
