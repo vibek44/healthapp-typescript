@@ -1,0 +1,19 @@
+.container {
+  background-color: gainsboro;
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  flex-flow: column;
+
+  margin: auto, auto;
+}
+
+.visibility,
+.weather {
+  display: flex;
+  flex-flow: row;
+}
+
+.error {
+  color: red;
+}
