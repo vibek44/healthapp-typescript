@@ -8,7 +8,7 @@ interface PatientProps {
 }
 const PatientInfoPage = ({ patient }: PatientProps) => {
   if (!patient) return undefined;
-  console.log(patient);
+  //console.log(patient);
   return (
     <Card sx={{ width: "30em", padding: "1em" }}>
       <Typography sx={{ my: 1 }} variant="h5">
@@ -28,14 +28,16 @@ const PatientInfoPage = ({ patient }: PatientProps) => {
       <Typography variant="h6">Entries</Typography>
       <Typography variant="subtitle1">
         {patient.entries.map((el) => (
-          <>
+          <div key={el.id}>
             <p key={el.id}>
               {el.date} :{el.description}
             </p>
-            {el.diagnosisCodes?.map((el) => (
-              <li>{el}</li>
-            ))}
-          </>
+            <ul>
+              {el.diagnosisCodes?.map((el) => (
+                <li key={el}>{el}</li>
+              ))}
+            </ul>
+          </div>
         ))}
       </Typography>
     </Card>
