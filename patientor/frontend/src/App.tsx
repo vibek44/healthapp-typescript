@@ -4,7 +4,7 @@ import { Route, Link, Routes, useMatch } from "react-router-dom";
 import { Button, Divider, Container, Typography } from "@mui/material";
 
 import { apiBaseUrl } from "./constants";
-import { Patient } from "./types";
+import { Patient, Diagnoses } from "./types";
 
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
@@ -12,17 +12,23 @@ import PatientInfoPage from "./components/PatientInfoPage";
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [diagnoses, setDiagnoses] = useState<Diagnoses[]>([]);
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const match = useMatch("/patients/:id");
-  const patientId = match?.params.id;
+  const patientId = match?.params?.id;
   const lastFetchedId = useRef<string | null>(null);
+
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
     let isActive = true;
     const fetchPatientList = async () => {
-      const patients = await patientService.getAll();
+      const [patientsData, diagnosesData] = await Promise.all([
+        patientService.getAll(),
+        patientService.getDiagnoses(),
+      ]);
       if (isActive) {
-        setPatients(patients);
+        setPatients(patientsData);
+        setDiagnoses(diagnosesData);
       }
     };
     void fetchPatientList();
@@ -43,7 +49,6 @@ const App = () => {
     };
     void fetchPatientInfo();
     console.log("1eff");
-
     return () => {
       isActive = false;
     };
@@ -61,7 +66,9 @@ const App = () => {
         <Routes>
           <Route
             path="/patients/:id"
-            element={<PatientInfoPage patient={patient} />}
+            element={
+              <PatientInfoPage patient={patient} diagnoses={diagnoses} />
+            }
           />
 
           <Route
