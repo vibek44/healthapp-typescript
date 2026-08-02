@@ -1,16 +1,17 @@
-import type { Patient } from "../../types";
+import type { Patient, Diagnoses } from "../../types";
 import { Card, Divider, Typography } from "@mui/material";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransGenderIcon from "@mui/icons-material/Female";
 interface PatientProps {
   patient: Patient | undefined;
+  diagnoses: Diagnoses[];
 }
-const PatientInfoPage = ({ patient }: PatientProps) => {
+const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   if (!patient) return undefined;
   //console.log(patient);
   return (
-    <Card sx={{ width: "30em", padding: "1em" }}>
+    <Card sx={{ width: "40em", padding: "1em", margin: "auto" }}>
       <Typography sx={{ my: 1 }} variant="h5">
         {patient.name}
         {patient.gender === "male" ? (
@@ -33,9 +34,17 @@ const PatientInfoPage = ({ patient }: PatientProps) => {
               {el.date} :{el.description}
             </p>
             <ul>
-              {el.diagnosisCodes?.map((el) => (
-                <li key={el}>{el}</li>
-              ))}
+              {el.diagnosisCodes?.map((el) => {
+                return diagnoses.map((diagnose) => {
+                  if (diagnose.code === el) {
+                    return (
+                      <li key={el}>
+                        {el} {diagnose.name}
+                      </li>
+                    );
+                  }
+                });
+              })}
             </ul>
           </div>
         ))}
