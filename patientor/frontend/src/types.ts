@@ -1,16 +1,10 @@
-export interface Diagnosis {
-  code: string;
-  name: string;
-  latin?: string;
-}
-
 export enum Gender {
   Male = "male",
   Female = "female",
   Other = "other",
 }
 
-interface Diagnoses {
+export interface Diagnoses {
   code: string;
   name: string;
   latin?: string;
@@ -48,7 +42,29 @@ interface HospitalEntry extends BaseEntry {
   discharge: { date: string; criteria: string };
 }
 
-type Entry = HealthCheckEntry | OccupationalHealthcareEntry | HospitalEntry;
+export type Entry =
+  | HealthCheckEntry
+  | OccupationalHealthcareEntry
+  | HospitalEntry;
+
+export interface EntryProps {
+  entry: Entry;
+  diagnoses: Diagnoses[];
+}
+interface EntryDetailsProps {
+  diagnoses: Diagnoses[];
+}
+export interface OccupationalHealthcareEntryProps extends EntryDetailsProps {
+  entry: OccupationalHealthcareEntry;
+}
+
+export interface HealthCheckEntryProps extends EntryDetailsProps {
+  entry: HealthCheckEntry;
+}
+
+export interface HospitalEntryProps extends EntryDetailsProps {
+  entry: HospitalEntry;
+}
 
 export interface Patient {
   id: string;
