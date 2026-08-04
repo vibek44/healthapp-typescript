@@ -1,8 +1,9 @@
 import type { Patient, Diagnoses } from "../../types";
-import { Card, Divider, Typography } from "@mui/material";
+import { Card, Divider, Paper, Typography } from "@mui/material";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransGenderIcon from "@mui/icons-material/Female";
+import EntryDetails from "./EntryDetails";
 interface PatientProps {
   patient: Patient | undefined;
   diagnoses: Diagnoses[];
@@ -29,24 +30,13 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
       <Typography variant="h6">Entries</Typography>
       <Typography variant="subtitle1">
         {patient.entries.map((el) => (
-          <div key={el.id}>
-            <p key={el.id}>
-              {el.date} :{el.description}
-            </p>
-            <ul>
-              {el.diagnosisCodes?.map((el) => {
-                return diagnoses.map((diagnose) => {
-                  if (diagnose.code === el) {
-                    return (
-                      <li key={el}>
-                        {el} {diagnose.name}
-                      </li>
-                    );
-                  }
-                });
-              })}
-            </ul>
-          </div>
+          <Paper
+            key={el.id}
+            variant="elevation"
+            sx={{ border: "solid", margin: 2, paddingLeft: 1 }}
+          >
+            <EntryDetails entry={el} diagnoses={diagnoses} />
+          </Paper>
         ))}
       </Typography>
     </Card>
