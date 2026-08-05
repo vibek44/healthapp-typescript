@@ -1,6 +1,5 @@
-
-import type { NewPatientEntry,} from "./types.ts";
-import {NewEntrySchema } from "./types.ts";
+import type { NewPatientEntry } from "./types.ts";
+import { PatientEntrySchema } from "./types.ts";
 
 /*
 const isString = (str: unknown): str is string => {
@@ -35,6 +34,5 @@ const parseEntry = (str: unknown): string => {
 };
 */
 export const parsePatientEntry = (entry: unknown): NewPatientEntry => {
-    return NewEntrySchema.parse(entry);
- 
+  return PatientEntrySchema.parse(entry);
 };
