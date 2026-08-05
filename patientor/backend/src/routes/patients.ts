@@ -46,5 +46,10 @@ patientsRouter.post(
   }
 );
 
+patientsRouter.post("/:id/entries", (req, res) => {
+  console.log(req.params.id);
+  res.send("hi");
+});
+
 patientsRouter.use(errorHandler);
 export default patientsRouter;
