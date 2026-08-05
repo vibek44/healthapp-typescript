@@ -1,18 +1,18 @@
 import { z } from "zod";
 
-export const GenderObject = {
+export const Gender = {
   Male: "male",
   Female: "female",
   Other: "other",
 } as const;
 // Gender  type is the union of all the propertie's value
-export type Gender = (typeof GenderObject)[keyof typeof GenderObject];
+export type Gender = (typeof Gender)[keyof typeof Gender];
 
-export const NewEntrySchema = z.object({
+export const PatientEntrySchema = z.object({
   name: z.string().min(3),
   occupation: z.string().min(2),
   dateOfBirth: z.iso.date(),
-  gender: z.enum(Object.values(GenderObject)),
+  gender: z.enum(Object.values(Gender)),
   ssn: z.string().min(9).includes("-"),
 });
 
@@ -59,8 +59,9 @@ type Entry = HealthCheckEntry | OccupationalHealthcareEntry | HospitalEntry;
 
 export type NonSensitivePatient = Omit<Patient, "ssn" | "entries">;
 
-export type NewPatientEntry = z.infer<typeof NewEntrySchema>;
+export type NewPatientEntry = z.infer<typeof PatientEntrySchema>;
 //this const object can be used both during compile time and run time
+
 export interface Patient extends NewPatientEntry {
   id: string;
   entries: Entry[];
