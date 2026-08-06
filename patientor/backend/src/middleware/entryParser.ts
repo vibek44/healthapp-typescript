@@ -1,7 +1,7 @@
 import { PatientEntrySchema } from "../types.ts";
 import { type Request, type Response, type NextFunction } from "express";
 
-export const newEntryParser = (
+export const newPatientParser = (
   req: Request,
   _res: Response,
   next: NextFunction
@@ -12,3 +12,5 @@ export const newEntryParser = (
     next(error);
   }
 };
+
+//export const patientEntry;
