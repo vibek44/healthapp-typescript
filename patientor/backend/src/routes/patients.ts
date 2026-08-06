@@ -4,7 +4,7 @@ import express, {
   type NextFunction,
 } from "express";
 import patientsService from "../services/patientService.ts";
-import { newEntryParser } from "../middleware/entryParser.ts";
+import { newPatientParser } from "../middleware/entryParser.ts";
 import errorHandler from "../middleware/errorHandler.ts";
 import type {
   PatientEntry,
@@ -31,7 +31,7 @@ patientsRouter.get("/:id", (req, res: Response<Patient | ErrorType>) => {
 
 patientsRouter.post(
   "/",
-  newEntryParser,
+  newPatientParser,
   (
     req: Request<unknown, unknown, NewPatientEntry>,
     res: Response<Patient>,
