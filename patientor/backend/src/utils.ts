@@ -3,6 +3,7 @@ import {
   type EntryWithoutId,
   type OccupationalEntryWithoutId,
   type HealthCheckEntryWithoutId,
+  type HospitalEntryWithoutId,
   type Diagnoses,
 } from "./types.ts";
 
@@ -76,6 +77,28 @@ const parseString = (str: unknown): string => {
   if (!isString(str)) throw new Error("invalid description:");
   return str;
 };
+const parseDischarge = (
+  discharge: unknown
+): { date: string; criteria: string } => {
+  if (
+    typeof discharge === "object" &&
+    discharge !== null &&
+    "date" in discharge &&
+    "criteria" in discharge
+  ) {
+    if (
+      isString(discharge.date) &&
+      isString(discharge.criteria) &&
+      isDate(discharge.date)
+    ) {
+      return {
+        date: discharge.date,
+        criteria: discharge.criteria,
+      };
+    }
+  }
+  throw new Error("invalid discharge entry");
+};
 const parseOccupationalEntry = (
   entry: EntryWithoutId
 ): OccupationalEntryWithoutId => {
@@ -130,6 +153,31 @@ const parseHealthCheckEntry = (
     return newEntry;
   }
   throw new Error("Invalid Healthcheck entry");
+};
+
+const parseHospitalEntry = (entry: EntryWithoutId): HospitalEntryWithoutId => {
+  if (
+    "type" in entry &&
+    entry.type === "Hospital" &&
+    "description" in entry &&
+    "discharge" in entry &&
+    "date" in entry &&
+    "specialist" in entry
+  ) {
+    const newEntry: HospitalEntryWithoutId = {
+      type: entry.type,
+      description: parseString(entry.description),
+      specialist: parseString(entry.specialist),
+      discharge: parseDischarge(entry.discharge),
+      date: parseDate(entry.date),
+      ...(entry.diagnosisCodes?.length !== 0
+        ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
+        : {}),
+    };
+
+    return newEntry;
+  }
+  throw new Error("Invalid Hospital entry");
 };
 
 const isEntry = (e: unknown): e is EntryWithoutId => {
