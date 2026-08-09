@@ -1,41 +1,11 @@
-import type {
-  EntryWithoutId,
-  OccupationalEntryWithoutId,
-  Diagnoses,
+import {
+  HealthCheckRating,
+  type EntryWithoutId,
+  type OccupationalEntryWithoutId,
+  type HealthCheckEntryWithoutId,
+  type Diagnoses,
 } from "./types.ts";
 
-/*
-const isString = (str: unknown): str is string => {
-  return typeof str === "string";
-};
-
-const isDate = (date:string):boolean => {
-   return Boolean(Date.parse(date))
-}
-
-const isGender = (gender:string):gender is Gender => {
-  return (Object.values(GenderObject) as string[]).includes(gender)
-}
-const parseGender = (gender:unknown):Gender => {
-  if(!isString (gender)|| !isGender(gender)){
-    throw new Error("Incorrect or missing gender content "+gender);
-  }
-  return gender
-}
-
-const parseDate=(str:unknown):string=>{
-  if(!isString(str) || !isDate(str)){
-    throw new Error("Incorrect or missing date content");
-  }
-  return str
-}
-const parseEntry = (str: unknown): string => {
-  if (!isString(str)) {
-    throw new Error("Incorrect or missing content");
-  }
-  return str;
-};
-*/
 const isString = (text: unknown): text is string => {
   return typeof text === "string";
 };
@@ -85,6 +55,16 @@ const parseSickLeave = (
   }
   throw new Error("invalid start and end date");
 };
+const isHealthCheckRating = (rating: number): rating is HealthCheckRating => {
+  return Object.values(HealthCheckRating).includes(rating as HealthCheckRating);
+};
+
+const parseRating = (rating: unknown): HealthCheckRating => {
+  if (typeof rating === "number" && isHealthCheckRating(rating)) {
+    return rating;
+  }
+  throw new Error("invalid Healthcheck rating");
+};
 const parseDate = (text: unknown): string => {
   if (!isString(text) || !isDate(text)) {
     throw new Error("Incorrect or missing date content");
@@ -124,6 +104,32 @@ const parseOccupationalEntry = (
     return newEntry;
   }
   throw new Error("Invalid OccupationalHealthcare entry");
+};
+const parseHealthCheckEntry = (
+  entry: EntryWithoutId
+): HealthCheckEntryWithoutId => {
+  if (
+    "type" in entry &&
+    entry.type === "HealthCheck" &&
+    "description" in entry &&
+    "healthCheckRating" in entry &&
+    "date" in entry &&
+    "specialist" in entry
+  ) {
+    const newEntry: HealthCheckEntryWithoutId = {
+      type: entry.type,
+      description: parseString(entry.description),
+      specialist: parseString(entry.specialist),
+      healthCheckRating: parseRating(entry.healthCheckRating),
+      date: parseDate(entry.date),
+      ...(entry.diagnosisCodes?.length !== 0
+        ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
+        : {}),
+    };
+
+    return newEntry;
+  }
+  throw new Error("Invalid Healthcheck entry");
 };
 
 const isEntry = (e: unknown): e is EntryWithoutId => {
