@@ -28,7 +28,11 @@ const isDate = (
 };
 
 const parseDiagnosisCodes = (codes: unknown): Array<Diagnoses["code"]> => {
-  if (Array.isArray(codes) && codes.every((code) => typeof code === "string")) {
+  if (
+    Array.isArray(codes) &&
+    codes.length > 0 &&
+    codes.every((code) => typeof code === "string")
+  ) {
     return codes;
   }
   throw new Error("Incorrect or missing diagnosis code");
@@ -116,7 +120,7 @@ const parseOccupationalEntry = (
       specialist: parseString(entry.specialist),
       employerName: parseString(entry.employerName),
       date: parseDate(entry.date),
-      ...(entry.diagnosisCodes?.length !== 0
+      ...(entry.diagnosisCodes
         ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
         : {}),
       ...(entry.sickLeave
@@ -145,7 +149,7 @@ const parseHealthCheckEntry = (
       specialist: parseString(entry.specialist),
       healthCheckRating: parseRating(entry.healthCheckRating),
       date: parseDate(entry.date),
-      ...(entry.diagnosisCodes?.length !== 0
+      ...(entry.diagnosisCodes
         ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
         : {}),
     };
@@ -170,7 +174,7 @@ const parseHospitalEntry = (entry: EntryWithoutId): HospitalEntryWithoutId => {
       specialist: parseString(entry.specialist),
       discharge: parseDischarge(entry.discharge),
       date: parseDate(entry.date),
-      ...(entry.diagnosisCodes?.length !== 0
+      ...(entry.diagnosisCodes
         ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
         : {}),
     };
