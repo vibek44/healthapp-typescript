@@ -4,7 +4,10 @@ import express, {
   type NextFunction,
 } from "express";
 import patientsService from "../services/patientService.ts";
-import { newPatientParser } from "../middleware/entryParser.ts";
+import {
+  newPatientParser,
+  patientEntryParser,
+} from "../middleware/entryParser.ts";
 import errorHandler from "../middleware/errorHandler.ts";
 import type {
   PatientEntry,
@@ -46,7 +49,7 @@ patientsRouter.post(
   }
 );
 
-patientsRouter.post("/:id/entries", (req, res) => {
+patientsRouter.post("/:id/entries", patientEntryParser, (req, res) => {
   console.log(req.params.id);
   res.send("hi");
 });
