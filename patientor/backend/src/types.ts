@@ -12,7 +12,7 @@ export const PatientEntrySchema = z.object({
   name: z.string().min(3),
   occupation: z.string().min(2),
   dateOfBirth: z.iso.date(),
-  gender: z.enum(Object.values(Gender)),
+  gender: z.enum([Gender.Female, Gender.Male, Gender.Other]),
   ssn: z.string().min(9).includes("-"),
 });
 
@@ -48,18 +48,25 @@ interface OccupationalHealthcareEntry extends BaseEntry {
   employerName: string;
   sickLeave?: { startDate: string; endDate: string };
 }
+export type OccupationalEntryWithoutId = Omit<
+  OccupationalHealthcareEntry,
+  "id"
+>;
 
 interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: { date: string; criteria: string };
 }
 
-type Entry = HealthCheckEntry | OccupationalHealthcareEntry | HospitalEntry;
+export type Entry =
+  | HealthCheckEntry
+  | OccupationalHealthcareEntry
+  | HospitalEntry;
 type UnionOmit<T, K extends string | number | symbol> = T extends unknown
   ? Omit<T, K>
   : never;
 
-export type EntryWithoutID = UnionOmit<Entry, "id">;
+export type EntryWithoutId = UnionOmit<Entry, "id">;
 
 export type NonSensitivePatient = Omit<Patient, "ssn" | "entries">;
 
