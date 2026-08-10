@@ -5,15 +5,13 @@ export const Gender = {
   Female: "female",
   Other: "other",
 } as const;
-// Gender  type is the union of all the propertie's value
-export type Gender = (typeof Gender)[keyof typeof Gender];
 
 export const PatientEntrySchema = z.object({
   name: z.string().min(3),
-  occupation: z.string().min(2),
+  occupation: z.string().trim().min(2),
   dateOfBirth: z.iso.date(),
-  gender: z.enum([Gender.Female, Gender.Male, Gender.Other]),
-  ssn: z.string().min(9).includes("-"),
+  gender: z.enum(Gender),
+  ssn: z.string().regex(/^\d{6}-\d{3}[A-Za-z]$/, "invalid ssn format"),
 });
 
 export interface Diagnoses {
@@ -29,20 +27,22 @@ interface BaseEntry {
   diagnosisCodes?: Array<Diagnoses["code"]>;
 }
 
-const HealthCheckRating = {
+export const HealthCheckRating = {
   Healthy: 0,
   LowRisk: 1,
   HighRisk: 2,
   CriticalRisk: 3,
 } as const;
 
-type HealthCheckRating =
+export type HealthCheckRating =
   (typeof HealthCheckRating)[keyof typeof HealthCheckRating];
 
 interface HealthCheckEntry extends BaseEntry {
   type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
+export type HealthCheckEntryWithoutId = Omit<HealthCheckEntry, "id">;
+
 interface OccupationalHealthcareEntry extends BaseEntry {
   type: "OccupationalHealthcare";
   employerName: string;
@@ -57,6 +57,7 @@ interface HospitalEntry extends BaseEntry {
   type: "Hospital";
   discharge: { date: string; criteria: string };
 }
+export type HospitalEntryWithoutId = Omit<HospitalEntry, "id">;
 
 export type Entry =
   | HealthCheckEntry
