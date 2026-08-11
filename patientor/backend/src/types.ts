@@ -42,7 +42,7 @@ const HealthCheckEntrySchema = BaseEntrySchema.extend({
   type: z.literal("HealthCheck"),
   healthCheckRating: HealthCheckRatingSchema,
 });
-const HealthCheckNoId = HealthCheckEntrySchema.omit({ id: true });
+const HealthCheckEntryNoId = HealthCheckEntrySchema.omit({ id: true });
 type HealthCheckEntry = z.infer<typeof HealthCheckEntrySchema>;
 type HealthCheckNoId = z.infer<typeof HealthCheckNoId>;
 
@@ -53,13 +53,18 @@ const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
     .object({ startDate: z.string(), endDate: z.string() })
     .optional(),
 });
+const OccupationalEntryNoId = OccupationalHealthcareEntrySchema.omit({
+  id: true,
+});
 type OccupationalHealthcareEntry = z.infer<
   typeof OccupationalHealthcareEntrySchema
 >;
+
 const HospitalEntrySchema = BaseEntrySchema.extend({
   type: z.literal("Hospital"),
   discharge: z.object({ date: z.string(), criteria: z.string() }),
 });
+const HospitalEntryNoId = HospitalEntrySchema.omit({ id: true });
 type HospitalEntry = z.infer<typeof HospitalEntrySchema>;
 
 const EntrySchema = z.discriminatedUnion("type", [
