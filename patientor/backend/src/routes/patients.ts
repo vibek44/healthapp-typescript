@@ -11,15 +11,15 @@ import {
 import errorHandler from "../middleware/errorHandler.ts";
 import type {
   PatientEntry,
-  NewPatientEntry,
   Patient,
   ErrorType,
+  NonSensitivePatientData,
 } from "../types.ts";
 // import type{ NewPatientEntry } from "../types.ts";
 
 const patientsRouter = express.Router();
 
-patientsRouter.get("/", (_req, res: Response<PatientEntry[]>) => {
+patientsRouter.get("/", (_req, res: Response<NonSensitivePatientData[]>) => {
   res.send(patientsService.getPatientData());
 });
 
@@ -36,7 +36,7 @@ patientsRouter.post(
   "/",
   newPatientParser,
   (
-    req: Request<unknown, unknown, NewPatientEntry>,
+    req: Request<unknown, unknown, PatientEntry>,
     res: Response<Patient>,
     next: NextFunction
   ) => {
@@ -50,7 +50,7 @@ patientsRouter.post(
 );
 
 patientsRouter.post("/:id/entries", patientEntryParser, (req, res) => {
-  console.log(req.params.id);
+  console.log("parsed", req.body);
   res.send("hi");
 });
 
