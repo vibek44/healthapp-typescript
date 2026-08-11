@@ -13,6 +13,7 @@ export const PatientEntrySchema = z.object({
   gender: z.enum(Gender),
   ssn: z.string().regex(/^\d{6}-\d{3}[A-Za-z]$/, "invalid ssn format"),
 });
+export type PatientEntry = z.infer<typeof PatientEntrySchema>;
 
 export const Diagnoses = z.object({
   code: z.string(),
@@ -44,7 +45,7 @@ const HealthCheckEntrySchema = BaseEntrySchema.extend({
 });
 const HealthCheckEntryNoId = HealthCheckEntrySchema.omit({ id: true });
 type HealthCheckEntry = z.infer<typeof HealthCheckEntrySchema>;
-type HealthCheckNoId = z.infer<typeof HealthCheckNoId>;
+type HealthCheckEntryNoId = z.infer<typeof HealthCheckEntryNoId>;
 
 const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
   type: z.literal("OccupationalHealthcare"),
@@ -67,9 +68,28 @@ const HospitalEntrySchema = BaseEntrySchema.extend({
 const HospitalEntryNoId = HospitalEntrySchema.omit({ id: true });
 type HospitalEntry = z.infer<typeof HospitalEntrySchema>;
 
-const EntrySchema = z.discriminatedUnion("type", [
-  HospitalEntrySchema,
+const Entry = z.discriminatedUnion("type", [
   HealthCheckEntrySchema,
   OccupationalHealthcareEntrySchema,
+  HospitalEntrySchema,
 ]);
-type Entry = z.infer<typeof EntrySchema>;
+
+const Patient = PatientEntrySchema.extend({
+  id: z.string(),
+  entries: z.array(Entry).optional(),
+});
+export type Patient = z.infer<typeof Patient>;
+
+const NonSensitivePatientData = Patient.omit({ ssn: true, entries: true });
+export type NonSensitivePatientData = z.infer<typeof NonSensitivePatientData>;
+
+const EntryNoId = z.discriminatedUnion("type", [
+  HospitalEntryNoId,
+  HealthCheckEntryNoId,
+  OccupationalEntryNoId,
+]);
+type EntryNoId = z.infer<typeof EntryNoId>;
+
+export interface ErrorType {
+  error: string;
+}
