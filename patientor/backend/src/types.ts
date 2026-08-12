@@ -7,9 +7,9 @@ export const Gender = {
 } as const;
 
 export const PatientEntrySchema = z.object({
-  name: z.string().min(3),
-  occupation: z.string().trim().min(2),
-  dateOfBirth: z.iso.date(),
+  name: z.string().trim().min(6, { error: "name is too short!" }),
+  occupation: z.string().trim().min(3, "Too Short"),
+  dateOfBirth: z.iso.date("Bad Date!"),
   gender: z.enum(Gender),
   ssn: z.string().regex(/^\d{6}-\d{3}[A-Za-z]$/, "invalid ssn format"),
 });
@@ -25,9 +25,11 @@ export type Diagnoses = z.infer<typeof Diagnoses>;
 
 const BaseEntrySchema = z.object({
   id: z.string(),
-  date: z.iso.date(),
-  description: z.string(),
-  specialist: z.string(),
+  date: z.iso.date({
+    error: (issue) => `Bad Date! Expected string, got ${typeof issue.input}`,
+  }),
+  description: z.string().min(10, "description too short or invalid"),
+  specialist: z.string().min(2, "specialist too short or invalid"),
   diagnosisCodes: z.array(Diagnoses.shape.code).optional(),
 });
 
