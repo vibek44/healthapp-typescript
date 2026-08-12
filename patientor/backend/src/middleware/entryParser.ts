@@ -1,7 +1,6 @@
 import { ZodError } from "zod";
-import { PatientEntrySchema } from "../types.ts";
+import { PatientEntrySchema, EntryNoId } from "../types.ts";
 import { type Request, type Response, type NextFunction } from "express";
-import { parseNewEntry } from "../utils.ts";
 
 export const newPatientParser = (
   req: Request,
@@ -21,12 +20,13 @@ export const patientEntryParser = (
   _res: Response,
   next: NextFunction
 ) => {
-  try {
-    req.body = parseNewEntry(req.body);
-    next();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      next(error);
-    }
+  const result = EntryNoId.safeParse(req.body);
+  if (result.error) {
+    next(result.error);
+    return;
   }
+  req.body = result.data;
+  console.log(result.data);
+
+  next();
 };
