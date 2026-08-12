@@ -1,4 +1,4 @@
-import z from "zod";
+import z, { date } from "zod";
 
 export const Gender = {
   Male: "male",
@@ -47,11 +47,16 @@ const HealthCheckEntryNoId = HealthCheckEntrySchema.omit({ id: true });
 type HealthCheckEntry = z.infer<typeof HealthCheckEntrySchema>;
 type HealthCheckEntryNoId = z.infer<typeof HealthCheckEntryNoId>;
 
+// InZod when properties are optional always use refine api before optional api
 const OccupationalHealthcareEntrySchema = BaseEntrySchema.extend({
   type: z.literal("OccupationalHealthcare"),
   employerName: z.string(),
   sickLeave: z
-    .object({ startDate: z.string(), endDate: z.string() })
+    .object({ startDate: z.iso.date(), endDate: z.iso.date() })
+    .refine((data) => new Date(data.startDate) <= new Date(data.endDate), {
+      message: "StartDate must be before EndDate",
+      path: ["endDate"],
+    })
     .optional(),
 });
 const OccupationalEntryNoId = OccupationalHealthcareEntrySchema.omit({
@@ -83,7 +88,7 @@ export type Patient = z.infer<typeof Patient>;
 const NonSensitivePatientData = Patient.omit({ ssn: true, entries: true });
 export type NonSensitivePatientData = z.infer<typeof NonSensitivePatientData>;
 
-const EntryNoId = z.discriminatedUnion("type", [
+export const EntryNoId = z.discriminatedUnion("type", [
   HospitalEntryNoId,
   HealthCheckEntryNoId,
   OccupationalEntryNoId,
