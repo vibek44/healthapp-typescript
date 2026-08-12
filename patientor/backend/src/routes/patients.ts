@@ -14,6 +14,7 @@ import type {
   Patient,
   ErrorType,
   NonSensitivePatientData,
+  EntryNoId,
 } from "../types.ts";
 // import type{ NewPatientEntry } from "../types.ts";
 
@@ -49,10 +50,18 @@ patientsRouter.post(
   }
 );
 
-patientsRouter.post("/:id/entries", patientEntryParser, (req, res) => {
-  console.log("parsed", req.body);
-  res.send("hi");
-});
+patientsRouter.post(
+  "/:id/entries",
+  patientEntryParser,
+  (
+    req: Request<{ id: string }, unknown, EntryNoId>,
+    res: Response,
+    _next: NextFunction
+  ) => {
+    const result = patientsService.addPatientEntry(req.params.id, req.body);
+    res.send("hi");
+  }
+);
 
 patientsRouter.use(errorHandler);
 export default patientsRouter;
