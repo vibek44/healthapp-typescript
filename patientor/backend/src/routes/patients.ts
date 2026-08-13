@@ -42,7 +42,7 @@ patientsRouter.post(
     next: NextFunction
   ) => {
     try {
-      const newEntry = patientsService.addPatientData(req.body);
+      const newEntry = patientsService.addPatient(req.body);
       res.send(newEntry);
     } catch (error: unknown) {
       next(error);
@@ -58,8 +58,12 @@ patientsRouter.post(
     res: Response,
     _next: NextFunction
   ) => {
+    console.log(req.body);
     const result = patientsService.addPatientEntry(req.params.id, req.body);
-    res.send("hi");
+    if (!result) {
+      return res.status(400).send({ error: "Patient Entry not found" });
+    }
+    return res.send(result);
   }
 );
 
