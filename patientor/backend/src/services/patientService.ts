@@ -4,6 +4,7 @@ import type {
   Patient,
   PatientEntry,
   EntryNoId,
+  Entry,
 } from "../types.ts";
 import patientData from "../../data/patients.ts";
 
@@ -24,7 +25,7 @@ const getSinglePatientData = (id: string): Patient | undefined => {
   else return data1;
 };
 
-const addPatientData = (patient: PatientEntry): Patient => {
+const addPatient = (patient: PatientEntry): Patient => {
   const newEntry = {
     id: uuid(),
     entries: [],
@@ -34,11 +35,17 @@ const addPatientData = (patient: PatientEntry): Patient => {
   return newEntry;
 };
 
-const addPatientEntry = (id: string, entry: EntryNoId) => {};
+const addPatientEntry = (id: string, entry: EntryNoId): Entry | undefined => {
+  const patient = data.find((el) => el.id === id);
+  if (!patient) return undefined;
+  const newEntry = { id: uuid(), ...entry };
+  patient.entries = patient.entries?.concat(newEntry);
+  return newEntry;
+};
 
 export default {
   getPatientData,
-  addPatientData,
+  addPatient,
   getSinglePatientData,
   addPatientEntry,
 };
