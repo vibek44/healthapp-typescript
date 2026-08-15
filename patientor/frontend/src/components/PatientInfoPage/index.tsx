@@ -1,16 +1,20 @@
 import type { Patient, Diagnoses } from "../../types";
-import { Card, Divider, Paper, Typography } from "@mui/material";
+import { Button, Card, Divider, Paper, Typography } from "@mui/material";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransGenderIcon from "@mui/icons-material/Female";
 import EntryDetails from "./EntryDetails";
+import AddEntryForm from "./AddEntryFrom";
+import { useState } from "react";
 interface PatientProps {
   patient: Patient | undefined;
-  diagnoses: Diagnoses[];
+  diagnoses: Diagnoses[] | undefined;
 }
 const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   if (!patient) return undefined;
-  //console.log(patient);
+  const [visibility, setVisibility] = useState<boolean>(false);
+  const handleVisibility = () => setVisibility(!visibility);
+
   return (
     <Card sx={{ width: "40em", padding: "1em", margin: "auto" }}>
       <Typography sx={{ my: 1 }} variant="h5">
@@ -27,7 +31,15 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
       <Typography>Occupation: {patient.occupation}</Typography>
       <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
       <Divider sx={{ m: "2em" }} />
-      <Typography variant="h6">Entries</Typography>
+      {visibility && <AddEntryForm handleVisibility={handleVisibility} />}
+      {!visibility && (
+        <Button variant="contained" onClick={handleVisibility}>
+          CREATE NEW ENTRY
+        </Button>
+      )}
+      <Typography variant="h6" sx={{ marginY: 5 }}>
+        Entries
+      </Typography>
       <Typography variant="subtitle1">
         {patient.entries.map((el) => (
           <Paper
