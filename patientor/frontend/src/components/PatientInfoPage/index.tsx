@@ -51,7 +51,7 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
             <Select
               label="create Entry"
               value={entry}
-              onChange={({ target }) => setEntry(target.value)}
+              onChange={({ target }) => handleSetEntry(target.value)}
             >
               <MenuItem value="HealthCheck">HelathCheck Entry</MenuItem>
               <MenuItem value="Hospital">Hospital Entry</MenuItem>
