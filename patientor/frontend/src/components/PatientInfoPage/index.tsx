@@ -45,9 +45,10 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
         <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
         <Divider sx={{ marginY: "1em" }} />
 
+        {entry && <AddEntryForm handleSetEntry={handleSetEntry} />}
         {visibility && (
           <FormControl fullWidth>
-            <InputLabel>select entry</InputLabel>
+            <InputLabel>select entryy</InputLabel>
             <Select
               label="create Entry"
               value={entry}
@@ -59,7 +60,6 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
             </Select>
           </FormControl>
         )}
-        {entry && <AddEntryForm handleSetEntry={handleSetEntry} />}
         {!entry && (
           <Button
             variant="contained"
