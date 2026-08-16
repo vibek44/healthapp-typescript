@@ -1,8 +1,9 @@
 import { useState } from "react";
+//import BaseEntryForm from "./BaseEntryForm";
 import {
-  TextField,
   Button,
   Grid,
+  TextField,
   Typography,
   Divider,
   FormControl,
@@ -14,66 +15,70 @@ interface Props {
   handleVisibility: () => void;
 }
 
-const BaseEntryForm = () => {
+const AddEntryForm = ({ handleVisibility }: Props) => {
   const [entryType, setEntryType] = useState<string>("");
   const handleSetEntryType = (value: string) => setEntryType(value);
+  console.log(entryType);
   return (
-    <>
-      <Typography variant="h5">New Entry Form</Typography>
-      <Divider sx={{ marginY: "1em" }} />
-      <FormControl fullWidth>
-        <InputLabel>select entry</InputLabel>
-        <Select
-          value={entryType}
-          onChange={({ target }) => handleSetEntryType(target.value)}
-        >
-          <MenuItem value="HealthCheck">HelathCheck Entry</MenuItem>
-          <MenuItem value="Hospital">Hospital Entry</MenuItem>
-          <MenuItem value="Occupational">Occupational Entry</MenuItem>
-        </Select>
-      </FormControl>
-
-      <TextField
-        required
-        size="small"
-        label="Date"
-        type="date"
-        slotProps={{
-          inputLabel: {
-            shrink: true,
-          },
+    <div>
+      <form
+        style={{
+          display: "grid",
+          gap: "1em",
+          border: "2px dashed ",
+          padding: "3em",
         }}
-      />
-      <TextField required size="small" label="Description" />
-      <TextField required size="small" label="Specialist" />
-      <TextField size="small" label="Diagnosis Codes(comma separated)" />
-    </>
+      >
+        <Typography variant="h5">New Entry Form</Typography>
+        <Divider sx={{ marginY: "1em" }} />
+        <FormControl fullWidth>
+          <InputLabel>select entry</InputLabel>
+          <Select
+            value={entryType}
+            onChange={({ target }) => handleSetEntryType(target.value)}
+          >
+            <MenuItem value="HealthCheck">HelathCheck </MenuItem>
+            <MenuItem value="Hospital">Hospital </MenuItem>
+            <MenuItem value="OccupationalHealthcare">
+              OccupationalHealthcare
+            </MenuItem>
+          </Select>
+        </FormControl>
+
+        {entryType && (
+          <>
+            <TextField
+              required
+              size="small"
+              label="Date"
+              type="date"
+              slotProps={{
+                inputLabel: {
+                  shrink: true,
+                },
+              }}
+            />
+            <TextField required size="small" label="Description" />
+            <TextField required size="small" label="Specialist" />
+            <TextField size="small" label="Diagnosis Codes(comma separated)" />
+            <Grid container justifyContent="space-between">
+              <Button variant="contained" type="submit">
+                SUBMIT
+              </Button>
+              <Button
+                onClick={handleVisibility}
+                variant="contained"
+                color="secondary"
+                type="button"
+              >
+                CANCEL
+              </Button>
+            </Grid>
+          </>
+        )}
+      </form>
+    </div>
   );
 };
-
-const AddEntryForm = ({ handleVisibility }: Props) => (
-  <div>
-    <form
-      style={{
-        display: "grid",
-        gap: "1em",
-        border: "2px dashed ",
-        padding: "3em",
-      }}
-    >
-      <BaseEntryForm />
-      <Grid container justifyContent="space-between">
-        <Button variant="contained">SUBMIT</Button>
-        <Button
-          onClick={handleVisibility}
-          variant="contained"
-          color="secondary"
-        >
-          CANCEL
-        </Button>
-      </Grid>
-    </form>
-  </div>
-);
 
 export default AddEntryForm;
