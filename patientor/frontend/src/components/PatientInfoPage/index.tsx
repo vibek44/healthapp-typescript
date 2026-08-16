@@ -52,7 +52,6 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
           <FormControl fullWidth>
             <InputLabel>select entry</InputLabel>
             <Select
-              label="create Entry"
               value={entryType}
               onChange={({ target }) => handleSetEntryType(target.value)}
             >
