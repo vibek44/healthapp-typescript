@@ -24,8 +24,8 @@ interface PatientProps {
 const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   if (!patient) return undefined;
   const [visibility, setVisibility] = useState<boolean>(false);
-  const [entryType, setEntryType] = useState<string>("");
-  const handleSetEntryType = (value: string) => setEntryType(value);
+  const handleVisibility = () => setVisibility(!visibility);
+
   //console.log(entry);
   return (
     <Card sx={{ width: "40em", padding: "1em", margin: "auto" }}>
@@ -45,23 +45,8 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
         <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
         <Divider sx={{ marginY: "1em" }} />
 
-        {entryType && (
-          <AddEntryForm entry={entryType} handleSetEntry={handleSetEntryType} />
-        )}
-        {visibility && (
-          <FormControl fullWidth>
-            <InputLabel>select entry</InputLabel>
-            <Select
-              value={entryType}
-              onChange={({ target }) => handleSetEntryType(target.value)}
-            >
-              <MenuItem value="HealthCheck">HelathCheck Entry</MenuItem>
-              <MenuItem value="Hospital">Hospital Entry</MenuItem>
-              <MenuItem value="Occupational">Occupational Entry</MenuItem>
-            </Select>
-          </FormControl>
-        )}
-        {!entryType && (
+        {visibility && <AddEntryForm handleVisibility={handleVisibility} />}
+        {!visibility && (
           <Button
             variant="contained"
             sx={{ marginX: "auto" }}
