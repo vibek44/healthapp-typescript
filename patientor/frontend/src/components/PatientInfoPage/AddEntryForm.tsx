@@ -12,8 +12,7 @@ const BaseEntryForm = () => (
       required
       size="small"
       label="Date"
-      defaultValue=""
-      type="Date"
+      type="date"
       slotProps={{
         inputLabel: {
           shrink: true,
