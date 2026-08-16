@@ -12,7 +12,7 @@ const AddEntryForm = ({ handleSetEntry }: Props) => (
         padding: "3em",
       }}
     >
-      <Typography variant="h5">New Entry</Typography>
+      <Typography variant="h5">New Entry Form</Typography>
       <Divider sx={{ marginY: "1em" }} />
       <TextField required size="small" label="Date" />
       <TextField required size="small" label="Description" />
