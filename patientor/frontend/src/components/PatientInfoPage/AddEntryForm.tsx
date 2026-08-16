@@ -1,8 +1,21 @@
 import { TextField, Button, Grid, Typography, Divider } from "@mui/material";
 interface Props {
   handleSetEntry: (value: string) => void;
+  entry: string;
 }
-const AddEntryForm = ({ handleSetEntry }: Props) => (
+
+const BaseEntryForm = () => (
+  <>
+    <Typography variant="h5">New Entry Form</Typography>
+    <Divider sx={{ marginY: "1em" }} />
+    <TextField required size="small" label="Date" />
+    <TextField required size="small" label="Description" />
+    <TextField required size="small" label="Specialist" />
+    <TextField size="small" label="Diagnosis Codes(comma separated)" />
+  </>
+);
+
+const AddEntryForm = ({ handleSetEntry, entry }: Props) => (
   <div>
     <form
       style={{
@@ -12,12 +25,7 @@ const AddEntryForm = ({ handleSetEntry }: Props) => (
         padding: "3em",
       }}
     >
-      <Typography variant="h5">New Entry Form</Typography>
-      <Divider sx={{ marginY: "1em" }} />
-      <TextField required size="small" label="Date" />
-      <TextField required size="small" label="Description" />
-      <TextField required size="small" label="Specialist" />
-      <TextField size="small" label="Diagnosis Codes(comma separated)" />
+      <BaseEntryForm />
       <Grid container justifyContent="space-between">
         <Button variant="contained">SUBMIT</Button>
         <Button
