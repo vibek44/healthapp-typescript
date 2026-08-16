@@ -21,7 +21,7 @@ const HealthCheckEntry = ({ entry, diagnoses }: HealthCheckEntryProps) => {
       <p>diagnose by: {entry.specialist}</p>
       <ul>
         {entry.diagnosisCodes?.map((el) => {
-          return diagnoses.map((diagnose) => {
+          return diagnoses?.map((diagnose) => {
             if (diagnose.code === el) {
               return (
                 <li key={el}>

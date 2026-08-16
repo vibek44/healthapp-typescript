@@ -1,8 +1,8 @@
 import { TextField, Button, Grid, Typography, Divider } from "@mui/material";
 interface Props {
-  handleVisibility: () => void;
+  handleSetEntry: (value: string) => void;
 }
-const AddEntryForm = ({ handleVisibility }: Props) => (
+const AddEntryForm = ({ handleSetEntry }: Props) => (
   <div>
     <form
       style={{
@@ -14,13 +14,14 @@ const AddEntryForm = ({ handleVisibility }: Props) => (
     >
       <Typography variant="h5">New Entry</Typography>
       <Divider sx={{ marginY: "1em" }} />
-      <TextField label="Date" />
-      <TextField label="Description" />
-      <TextField label="Specialist" />
+      <TextField required size="small" label="Date" />
+      <TextField required size="small" label="Description" />
+      <TextField required size="small" label="Specialist" />
+      <TextField size="small" label="Diagnosis Codes(comma separated)" />
       <Grid container justifyContent="space-between">
         <Button variant="contained">SUBMIT</Button>
         <Button
-          onClick={handleVisibility}
+          onClick={() => handleSetEntry("")}
           variant="contained"
           color="secondary"
         >

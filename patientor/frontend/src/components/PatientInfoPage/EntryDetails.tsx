@@ -1,5 +1,5 @@
-import OccupationalHealthcare from "./OccupationalHealthcare";
 import type { EntryProps } from "../../types";
+import OccupationalHealthcare from "./OccupationalHealthcare";
 import HospitalEntryDetails from "./HospitalEntry";
 import HealthCheckEntry from "./HealthCheckEntry";
 
