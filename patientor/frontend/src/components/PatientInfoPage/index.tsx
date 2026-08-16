@@ -4,7 +4,7 @@ import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransGenderIcon from "@mui/icons-material/Female";
 import EntryDetails from "./EntryDetails";
-import AddEntryForm from "./AddEntryFrom";
+import AddEntryForm from "./AddEntryForm";
 import { useState } from "react";
 interface PatientProps {
   patient: Patient | undefined;
