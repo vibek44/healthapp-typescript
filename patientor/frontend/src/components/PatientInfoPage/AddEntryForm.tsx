@@ -8,7 +8,18 @@ const BaseEntryForm = () => (
   <>
     <Typography variant="h5">New Entry Form</Typography>
     <Divider sx={{ marginY: "1em" }} />
-    <TextField required size="small" label="Date" />
+    <TextField
+      required
+      size="small"
+      label="Date"
+      defaultValue=""
+      type="Date"
+      slotProps={{
+        inputLabel: {
+          shrink: true,
+        },
+      }}
+    />
     <TextField required size="small" label="Description" />
     <TextField required size="small" label="Specialist" />
     <TextField size="small" label="Diagnosis Codes(comma separated)" />
