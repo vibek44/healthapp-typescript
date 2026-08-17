@@ -1,21 +1,10 @@
 import type { Patient, Diagnoses } from "../../types";
-import {
-  Button,
-  Card,
-  Divider,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  Paper,
-  Select,
-  Typography,
-  Grid,
-} from "@mui/material";
+import { Button, Card, Divider, Paper, Typography, Grid } from "@mui/material";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransGenderIcon from "@mui/icons-material/Female";
 import EntryDetails from "./EntryDetails";
-import AddEntryForm from "./AddEntryForm";
+import AddEntryForm from "../EntryForm/AddEntryForm";
 import { useState } from "react";
 interface PatientProps {
   patient: Patient | undefined;
@@ -26,7 +15,6 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   const [visibility, setVisibility] = useState<boolean>(false);
   const handleVisibility = () => setVisibility(!visibility);
 
-  //console.log(entry);
   return (
     <Card sx={{ width: "40em", padding: "1em", margin: "auto" }}>
       <Grid container rowSpacing={2} direction="column">
