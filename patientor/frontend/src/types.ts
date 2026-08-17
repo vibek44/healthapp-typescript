@@ -17,7 +17,7 @@ interface BaseEntry {
   diagnosisCodes?: Array<Diagnoses["code"]>;
 }
 
-const HealthCheckRating = {
+export const HealthCheckRating = {
   Healthy: 0,
   LowRisk: 1,
   HighRisk: 2,
@@ -49,10 +49,10 @@ export type Entry =
 
 export interface EntryProps {
   entry: Entry;
-  diagnoses: Diagnoses[];
+  diagnoses: Diagnoses[] | undefined;
 }
 interface EntryDetailsProps {
-  diagnoses: Diagnoses[];
+  diagnoses: Diagnoses[] | undefined;
 }
 export interface OccupationalHealthcareEntryProps extends EntryDetailsProps {
   entry: OccupationalHealthcareEntry;
