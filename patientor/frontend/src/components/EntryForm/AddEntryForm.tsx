@@ -27,9 +27,11 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
       }}
     >
       <Typography variant="h5">New Entry Form</Typography>
-      <Divider sx={{ marginY: "1em" }} />
-      <Typography variant="subtitle1">Field with * are rquired</Typography>
       <Divider />
+      <Typography variant="subtitle1" color="info" fontFamily="unset">
+        Field with * are required
+      </Typography>
+      <Divider sx={{ marginY: "1em" }} />
       <FormControl fullWidth>
         <InputLabel>select entry</InputLabel>
         <Select

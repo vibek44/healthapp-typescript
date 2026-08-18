@@ -32,7 +32,16 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
       />
       <TextField required size="small" label="Description" />
       <TextField required size="small" label="Specialist" />
-      <TextField size="small" label="Diagnosis Codes(comma separated)" />
+      <TextField
+        size="small"
+        placeholder="L20, Z74.3"
+        label="Diagnosis Codes(comma separated)"
+        slotProps={{
+          inputLabel: {
+            shrink: true,
+          },
+        }}
+      />
 
       {entryType === "Hospital" && (
         <>
