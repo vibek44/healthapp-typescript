@@ -1,10 +1,7 @@
 import { useState } from "react";
-//import BaseEntryForm from "./BaseEntryForm";
-import { HealthCheckRating } from "../../types";
+import BaseEntryForm from "./BaseEntryForm";
+
 import {
-  Button,
-  Grid,
-  TextField,
   Typography,
   Divider,
   FormControl,
@@ -18,7 +15,6 @@ interface Props {
 
 const AddEntryForm = ({ handleVisibility }: Props) => {
   const [entryType, setEntryType] = useState<string>("");
-  const [rating, setRating] = useState<number>(0);
   const handleSetEntryType = (value: string) => setEntryType(value);
   console.log(entryType);
   return (
@@ -32,6 +28,8 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
     >
       <Typography variant="h5">New Entry Form</Typography>
       <Divider sx={{ marginY: "1em" }} />
+      <Typography variant="subtitle1">Field with * are rquired</Typography>
+      <Divider />
       <FormControl fullWidth>
         <InputLabel>select entry</InputLabel>
         <Select
@@ -45,94 +43,10 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
           </MenuItem>
         </Select>
       </FormControl>
-
-      {entryType && (
-        <>
-          <TextField
-            required
-            size="small"
-            label="Date"
-            type="date"
-            slotProps={{
-              inputLabel: {
-                shrink: true,
-              },
-            }}
-          />
-          <TextField required size="small" label="Description" />
-          <TextField required size="small" label="Specialist" />
-          <TextField size="small" label="Diagnosis Codes(comma separated)" />
-          {entryType === "HealthCheck" && (
-            <>
-              <FormControl fullWidth>
-                <InputLabel>Health rating</InputLabel>
-                <Select
-                  value={rating}
-                  onChange={({ target }) => setRating(target.value)}
-                >
-                  {Object.entries(HealthCheckRating).map((el) => (
-                    <MenuItem value={el[1]}>
-                      {el[1]}-{el[0]}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </>
-          )}
-          {entryType === "Hospital" && (
-            <>
-              <TextField
-                required
-                type="date"
-                label="Discharge date"
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-              />
-              <TextField required type="text" label="criteria" />
-            </>
-          )}
-          {entryType === "OccupationalHealthcare" && (
-            <>
-              <TextField required type="text" label="Employer name" />
-              <TextField
-                type="date"
-                label="Leave Startdate"
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-              />
-              <TextField
-                type="date"
-                label="Leave EndDate"
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                }}
-              />
-            </>
-          )}
-
-          <Grid container justifyContent="space-between">
-            <Button variant="contained" type="submit">
-              SUBMIT
-            </Button>
-            <Button
-              onClick={handleVisibility}
-              variant="contained"
-              color="secondary"
-              type="button"
-            >
-              CANCEL
-            </Button>
-          </Grid>
-        </>
-      )}
+      <BaseEntryForm
+        entryType={entryType}
+        handleVisibility={handleVisibility}
+      />
     </form>
   );
 };
