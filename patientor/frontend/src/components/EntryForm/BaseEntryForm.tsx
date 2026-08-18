@@ -1,14 +1,6 @@
-import {
-  TextField,
-  Grid,
-  Button,
-  FormControl,
-  Select,
-  InputLabel,
-  MenuItem,
-} from "@mui/material";
-import { useState } from "react";
-import { HealthCheckRating } from "../../types";
+import { useForm } from "react-hook-form";
+
+//import { HealthCheckRating } from "../../types";
 
 interface BaseEntryProps {
   entryType: string;
@@ -16,7 +8,33 @@ interface BaseEntryProps {
 }
 const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
   if (!entryType) return null;
+  const formhook = useForm();
+  console.log(formhook);
+};
+
+export default BaseEntryForm;
+
+/*
   const [rating, setRating] = useState<number>(0);
+  const [date, setDate] = useState<string>("");
+  const [description, setDescription] = useState<string>("");
+  const [specialist, setSpecialist] = useState<string>("");
+  const [diagnosisCodes, setDiagnosisCodes] = useState<string[]>([]);
+  const [employerName, setEmployerName] = useState<string>("");
+  const [sickLeave, setSickLeave] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({ startDate: "", endDate: "" });
+  const [discharge, setDischarge] = useState<{
+    date: string;
+    criteria: string;
+  }>({
+    date: "",
+    criteria: "",
+  });
+
+  console.log(diagnosisCodes, date);
+
   return (
     <>
       <TextField
@@ -24,18 +42,36 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
         size="small"
         label="Date"
         type="date"
+        value={date}
+        onChange={({ target }) => setDate(target.value)}
         slotProps={{
           inputLabel: {
             shrink: true,
           },
         }}
       />
-      <TextField required size="small" label="Description" />
-      <TextField required size="small" label="Specialist" />
+      <TextField
+        required
+        size="small"
+        type="text"
+        label="Description"
+        value={description}
+        onChange={({ target }) => setDescription(target.value)}
+      />
+      <TextField
+        required
+        size="small"
+        type="text"
+        label="Specialist"
+        value={specialist}
+        onChange={({ target }) => setSpecialist(target.value)}
+      />
       <TextField
         size="small"
         placeholder="L20, Z74.3"
         label="Diagnosis Codes(comma separated)"
+        value={diagnosisCodes}
+        onChange={({ target }) => setDiagnosisCodes(target.value.split(","))}
         slotProps={{
           inputLabel: {
             shrink: true,
@@ -112,6 +148,5 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
       </Grid>
     </>
   );
-};
 
-export default BaseEntryForm;
+  */
