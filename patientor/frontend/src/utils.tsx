@@ -7,7 +7,7 @@ export const getDefaultValues = (entryType: unknown) => {
     date: "",
     description: "",
     specialist: "",
-    diagnosisCodes: [] as string[],
+    diagnosisCodes: "",
   };
   if (typeof entryType !== "string") throw new Error("not string type");
   if (
