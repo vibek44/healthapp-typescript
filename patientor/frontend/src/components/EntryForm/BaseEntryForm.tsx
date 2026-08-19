@@ -1,4 +1,5 @@
 import { useForm } from "react-hook-form";
+import { getDefaultValues } from "../../utils";
 
 //import { HealthCheckRating } from "../../types";
 
@@ -7,9 +8,12 @@ interface BaseEntryProps {
   handleVisibility: () => void;
 }
 const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
+  const { register, formState } = useForm({
+    defaultValues: getDefaultValues(entryType),
+  });
+
+  console.log(formState);
   if (!entryType) return null;
-  const formhook = useForm();
-  console.log(formhook);
 };
 
 export default BaseEntryForm;
