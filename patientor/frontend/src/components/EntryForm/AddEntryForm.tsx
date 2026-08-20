@@ -16,7 +16,7 @@ interface Props {
 const AddEntryForm = ({ handleVisibility }: Props) => {
   const [entryType, setEntryType] = useState<string>("");
   const handleSetEntryType = (value: string) => setEntryType(value);
-  console.log(entryType);
+  //console.log(entryType);
   return (
     <form
       style={{
@@ -28,9 +28,11 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
     >
       <Typography variant="h5">New Entry Form</Typography>
       <Divider />
-      <Typography variant="subtitle1" color="info" fontFamily="unset">
-        Field with * are required
-      </Typography>
+      {entryType && (
+        <Typography variant="subtitle1" color="info" fontFamily="unset">
+          Field with * are required
+        </Typography>
+      )}
       <Divider sx={{ marginY: "1em" }} />
       <FormControl fullWidth>
         <InputLabel>select entry</InputLabel>
@@ -45,10 +47,12 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
           </MenuItem>
         </Select>
       </FormControl>
-      <BaseEntryForm
-        entryType={entryType}
-        handleVisibility={handleVisibility}
-      />
+      {entryType && (
+        <BaseEntryForm
+          entryType={entryType}
+          handleVisibility={handleVisibility}
+        />
+      )}
     </form>
   );
 };
