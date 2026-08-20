@@ -1,5 +1,7 @@
 import { useForm } from "react-hook-form";
 import { getDefaultValues } from "../../utils";
+import { useEffect } from "react";
+import type { EntryFormValues } from "../../types";
 
 //import { HealthCheckRating } from "../../types";
 
@@ -8,12 +10,59 @@ interface BaseEntryProps {
   handleVisibility: () => void;
 }
 const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
-  const { register, formState } = useForm({
+  const { register, reset, formState } = useForm<EntryFormValues>({
     defaultValues: getDefaultValues(entryType),
   });
+  useEffect(() => {
+    reset(getDefaultValues(entryType));
+  }, [entryType, reset]);
+  // console.log(formState);
 
   console.log(formState);
   if (!entryType) return null;
+
+  return (
+    <>
+      <input
+        {...register("date", {
+          required: "Date is required",
+        })}
+        type="date"
+      />
+      <input
+        {...register("description", {
+          required: "description is required",
+        })}
+        type="text"
+        placeholder="Description"
+      />
+      <input
+        {...register("specialist", {
+          required: "specialist is required",
+        })}
+        type="text"
+        placeholder="Specialist"
+      />
+      <input
+        {...register("diagnosisCodes")}
+        type="text"
+        placeholder="DiagnosisCodes"
+      />
+      {entryType === "HealthCheck" && (
+        <>
+          <select {...register("healthCheckRating")}>
+            <option value={0}>Healthy</option>
+          </select>
+        </>
+      )}
+      {entryType === "Hospital" && (
+        <>
+          <input type="date" {...register("dischargeDate")} />
+          <input type="text" {...register("criteria")} />
+        </>
+      )}
+    </>
+  );
 };
 
 export default BaseEntryForm;
