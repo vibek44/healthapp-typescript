@@ -1,4 +1,5 @@
-import { useForm } from "react-hook-form";
+import { TextField } from "@mui/material";
+import { useForm, Controller } from "react-hook-form";
 import { getDefaultValues } from "../../utils";
 import { useEffect } from "react";
 import type { EntryFormValues } from "../../types";
@@ -10,57 +11,85 @@ interface BaseEntryProps {
   handleVisibility: () => void;
 }
 const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
-  const { register, reset, formState } = useForm<EntryFormValues>({
+  const {
+    control,
+    reset,
+    formState: { errors },
+  } = useForm<EntryFormValues>({
     defaultValues: getDefaultValues(entryType),
   });
   useEffect(() => {
-    reset(getDefaultValues(entryType));
+    if (entryType) {
+      reset(getDefaultValues(entryType));
+    }
   }, [entryType, reset]);
   // console.log(formState);
 
-  console.log(formState);
   if (!entryType) return null;
 
   return (
     <>
-      <input
-        {...register("date", {
-          required: "Date is required",
-        })}
-        type="date"
+      <Controller
+        name="date"
+        control={control}
+        rules={{ required: "Date is required" }}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            type="date"
+            label="date"
+            slotProps={{ inputLabel: { shrink: true } }}
+            error={!!errors.date}
+            helperText={errors.date?.message}
+          />
+        )}
       />
-      <input
-        {...register("description", {
-          required: "description is required",
-        })}
-        type="text"
-        placeholder="Description"
+      <Controller
+        name="description"
+        control={control}
+        rules={{
+          required: "Description is required",
+          minLength: 6,
+          maxLength: 30,
+        }}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            type="text"
+            label="description"
+            slotProps={{ inputLabel: { shrink: true } }}
+            error={!!errors.description}
+            helperText={errors.description?.message}
+          />
+        )}
       />
-      <input
-        {...register("specialist", {
+      <Controller
+        name="specialist"
+        control={control}
+        rules={{
           required: "specialist is required",
-        })}
-        type="text"
-        placeholder="Specialist"
+          minLength: 3,
+          maxLength: 15,
+        }}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            type="text"
+            label="specialist"
+            slotProps={{ inputLabel: { shrink: true } }}
+            error={!!errors.specialist}
+            helperText={errors.specialist?.message}
+          />
+        )}
       />
-      <input
-        {...register("diagnosisCodes")}
-        type="text"
-        placeholder="DiagnosisCodes"
+      <Controller
+        name="diagnosisCodes"
+        control={control}
+        render={({ field }) => <TextField {...field} />}
       />
-      {entryType === "HealthCheck" && (
-        <>
-          <select {...register("healthCheckRating")}>
-            <option value={0}>Healthy</option>
-          </select>
-        </>
-      )}
-      {entryType === "Hospital" && (
-        <>
-          <input type="date" {...register("dischargeDate")} />
-          <input type="text" {...register("criteria")} />
-        </>
-      )}
+      {entryType === "HealthCheck" && <></>}
+
+      {entryType === "Hospital" && <></>}
     </>
   );
 };
