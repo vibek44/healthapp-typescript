@@ -86,15 +86,20 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
       <Controller
         name="diagnosisCodes"
         control={control}
+        rules={{
+          validate: {
+            checkAlphaCase: (value) => {
+              const testValues = value.replace(/[0-9.,]/g, "");
+              return (
+                /^[A-Za-z]+$/g.test(testValues) ||
+                "Code cant have invalid characters"
+              );
+            },
+          },
+        }}
         render={({ field }) => (
           <TextField
             {...field}
-            onChange={(e) =>
-              field.onChange(
-                e.target.value.split(",").map((code) => code.trim())
-              )
-            }
-            value={field.value?.join(",") ?? ""}
             type="text"
             label="diagnosisCodes"
             slotProps={{ inputLabel: { shrink: true } }}
