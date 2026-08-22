@@ -113,27 +113,28 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
         )}
       />
       {entryType === "HealthCheck" && (
-        <>
-          <Controller
-            name="healthCheckRating"
-            control={control}
-            render={({ field }) => (
-              <FormControl>
-                <InputLabel>Rating </InputLabel>
-                <Select
-                  {...field}
-                  onChange={(e) => console.log(e.target.value)}
-                >
-                  {Object.entries(HealthCheckRating).map((el) => (
-                    <MenuItem value={el[1]}>
-                      {el[0]} - {el[1]}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            )}
-          />
-        </>
+        <Controller
+          name="healthCheckRating"
+          control={control}
+          render={({ field }) => (
+            <FormControl>
+              <InputLabel>Rating </InputLabel>
+              <Select
+                {...field}
+                onChange={(e) => {
+                  field.onChange((field.value = e.target.value));
+                }}
+                value={field.value ?? ""}
+              >
+                {Object.entries(HealthCheckRating).map((el) => (
+                  <MenuItem value={el[1]}>
+                    {el[0]} - {el[1]}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+        />
       )}
 
       {entryType === "Hospital" && <></>}
