@@ -89,7 +89,7 @@ export interface EntryFormValues {
   date: string;
   description: string;
   specialist: string;
-  diagnosisCodes: string[];
+  diagnosisCodes: string;
   // HealthCheck
   healthCheckRating?: number;
   // Hospital
