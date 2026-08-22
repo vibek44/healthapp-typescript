@@ -1,10 +1,16 @@
-import { TextField } from "@mui/material";
+import {
+  TextField,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { getDefaultValues } from "../../utils";
 import { useEffect } from "react";
 import type { EntryFormValues } from "../../types";
 
-//import { HealthCheckRating } from "../../types";
+import { HealthCheckRating } from "../../types";
 
 interface BaseEntryProps {
   entryType: string;
@@ -106,7 +112,29 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           />
         )}
       />
-      {entryType === "HealthCheck" && <></>}
+      {entryType === "HealthCheck" && (
+        <>
+          <Controller
+            name="healthCheckRating"
+            control={control}
+            render={({ field }) => (
+              <FormControl>
+                <InputLabel>Rating </InputLabel>
+                <Select
+                  {...field}
+                  onChange={(e) => console.log(e.target.value)}
+                >
+                  {Object.entries(HealthCheckRating).map((el) => (
+                    <MenuItem value={el[1]}>
+                      {el[0]} - {el[1]}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            )}
+          />
+        </>
+      )}
 
       {entryType === "Hospital" && <></>}
     </>
