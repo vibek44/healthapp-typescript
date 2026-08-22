@@ -1,5 +1,3 @@
-import type { EntryFormValues } from "./types";
-
 const assertNever = (value: never): never => {
   throw new Error(`unhandled Case ${value}`);
 };
@@ -16,7 +14,7 @@ export const getDefaultValues = (entryType: unknown) => {
     date: "",
     description: "",
     specialist: "",
-    diagnosisCodes: "",
+    diagnosisCodes: [] as string[],
   };
 
   switch (entryType) {
