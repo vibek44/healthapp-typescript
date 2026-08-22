@@ -47,6 +47,12 @@ export type Entry =
   | OccupationalHealthcareEntry
   | HospitalEntry;
 
+type UnionOmit<T, K extends string | number | symbol> = T extends unknown
+  ? Omit<T, K>
+  : never;
+
+export type EntryWithoutId = UnionOmit<Entry, "id">;
+
 export interface EntryProps {
   entry: Entry;
   diagnoses: Diagnoses[] | undefined;
@@ -77,3 +83,20 @@ export interface Patient {
 }
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
+export interface EntryFormValues {
+  type: string;
+  date: string;
+  description: string;
+  specialist: string;
+  diagnosisCodes: string[];
+  // HealthCheck
+  healthCheckRating?: number;
+  // Hospital
+  dischargeDate?: string;
+  criteria?: string;
+  // OccupationalHealthcare
+  employerName?: string;
+  startDate?: string;
+  endDate?: string;
+}
