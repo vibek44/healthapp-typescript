@@ -15,9 +15,7 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
     control,
     reset,
     formState: { errors },
-  } = useForm<EntryFormValues>({
-    defaultValues: getDefaultValues(entryType),
-  });
+  } = useForm<EntryFormValues>({ defaultValues: getDefaultValues(entryType) });
   useEffect(() => {
     if (entryType) {
       reset(getDefaultValues(entryType));
@@ -50,7 +48,10 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
         rules={{
           required: "Description is required",
           minLength: 6,
-          maxLength: 30,
+          maxLength: {
+            value: 30,
+            message: "description cannot  exceed 30 charactor",
+          },
         }}
         render={({ field }) => (
           <TextField
@@ -85,7 +86,20 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
       <Controller
         name="diagnosisCodes"
         control={control}
-        render={({ field }) => <TextField {...field} />}
+        render={({ field }) => (
+          <TextField
+            {...field}
+            onChange={(e) =>
+              field.onChange(
+                e.target.value.split(",").map((code) => code.trim())
+              )
+            }
+            value={field.value?.join(",") ?? ""}
+            type="text"
+            label="diagnosisCodes"
+            slotProps={{ inputLabel: { shrink: true } }}
+          />
+        )}
       />
       {entryType === "HealthCheck" && <></>}
 
