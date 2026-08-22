@@ -14,7 +14,7 @@ export const getDefaultValues = (entryType: unknown) => {
     date: "",
     description: "",
     specialist: "",
-    diagnosisCodes: [] as string[],
+    diagnosisCodes: "",
   };
 
   switch (entryType) {
