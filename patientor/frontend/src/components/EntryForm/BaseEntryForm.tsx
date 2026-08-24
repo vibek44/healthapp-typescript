@@ -154,6 +154,46 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           />
         </>
       )}
+      {entryType === "OccupationalHealthcare" && (
+        <>
+          <Controller
+            name="employerName"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="text"
+                label="Employer-Name"
+                slotProps={{ inputLabel: { shrink: true } }}
+              />
+            )}
+          />
+          <Controller
+            name="startDate"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="date"
+                label="startDate"
+                slotProps={{ inputLabel: { shrink: true } }}
+              />
+            )}
+          />
+          <Controller
+            name="endDate"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="date"
+                label="endDate"
+                slotProps={{ inputLabel: { shrink: true } }}
+              />
+            )}
+          />
+        </>
+      )}
     </>
   );
 };
