@@ -1,10 +1,4 @@
-import {
-  TextField,
-  Select,
-  MenuItem,
-  FormControl,
-  InputLabel,
-} from "@mui/material";
+import { TextField, MenuItem } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { getDefaultValues } from "../../utils";
 import { useEffect } from "react";
@@ -19,6 +13,7 @@ interface BaseEntryProps {
 const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
   const {
     control,
+    watch,
     reset,
     formState: { errors },
   } = useForm<EntryFormValues>({ defaultValues: getDefaultValues(entryType) });
@@ -27,8 +22,9 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
       reset(getDefaultValues(entryType));
     }
   }, [entryType, reset]);
-  // console.log(formState);
-
+  // console.log(for);
+  const formValues = watch();
+  console.log(formValues);
   if (!entryType) return null;
 
   return (
@@ -96,10 +92,7 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           validate: {
             checkAlphaCase: (value) => {
               const testValues = value.replace(/[0-9.,]/g, "");
-              return (
-                /^[A-Za-z]+$/g.test(testValues) ||
-                "Code cant have invalid characters"
-              );
+              return /^[A-Za-z]+$/g.test(testValues) || "invalid code";
             },
           },
         }}
@@ -117,27 +110,50 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           name="healthCheckRating"
           control={control}
           render={({ field }) => (
-            <FormControl>
-              <InputLabel>Rating </InputLabel>
-              <Select
-                {...field}
-                onChange={(e) => {
-                  field.onChange((field.value = e.target.value));
-                }}
-                value={field.value ?? ""}
-              >
-                {Object.entries(HealthCheckRating).map((el) => (
-                  <MenuItem value={el[1]}>
-                    {el[0]} - {el[1]}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
+            <TextField
+              {...field}
+              select
+              label="rating"
+              value={field.value ?? 0}
+            >
+              {Object.entries(HealthCheckRating).map(([key, value]) => (
+                <MenuItem key={value} value={value}>
+                  {key} - {value}
+                </MenuItem>
+              ))}
+            </TextField>
           )}
         />
       )}
 
-      {entryType === "Hospital" && <></>}
+      {entryType === "Hospital" && (
+        <>
+          <Controller
+            name="dischargeDate"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="date"
+                label="dischargeDate"
+                slotProps={{ inputLabel: { shrink: true } }}
+              />
+            )}
+          />
+          <Controller
+            name="criteria"
+            control={control}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="text"
+                label="criteria"
+                slotProps={{ inputLabel: { shrink: true } }}
+              />
+            )}
+          />
+        </>
+      )}
     </>
   );
 };
