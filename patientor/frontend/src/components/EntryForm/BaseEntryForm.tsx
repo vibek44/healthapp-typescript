@@ -114,6 +114,7 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
               {...field}
               select
               label="rating"
+              type="text"
               value={field.value ?? 0}
             >
               {Object.entries(HealthCheckRating).map(([key, value]) => (
