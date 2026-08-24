@@ -1,4 +1,4 @@
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem, Grid, Button } from "@mui/material";
 import { useForm, Controller } from "react-hook-form";
 import { getDefaultValues } from "../../utils";
 import { useEffect } from "react";
@@ -132,6 +132,7 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           <Controller
             name="dischargeDate"
             control={control}
+            rules={{ required: "DischargeDate is missing" }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -144,6 +145,7 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           <Controller
             name="criteria"
             control={control}
+            rules={{ required: "criteria is missing" }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -160,6 +162,7 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           <Controller
             name="employerName"
             control={control}
+            rules={{ required: "Employername is missing" }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -195,6 +198,19 @@ const BaseEntryForm = ({ entryType, handleVisibility }: BaseEntryProps) => {
           />
         </>
       )}
+      <Grid container justifyContent="space-between">
+        <Button variant="contained" type="submit">
+          SUBMIT
+        </Button>
+        <Button
+          onClick={handleVisibility} //handleVisibility
+          variant="contained"
+          color="secondary"
+          type="button"
+        >
+          CANCEL
+        </Button>
+      </Grid>
     </>
   );
 };
