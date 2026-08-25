@@ -80,10 +80,13 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
           validate: {
             checkAlphaCase: (value) => {
               if (!value) return true;
-              return (
-                /^[A-Z][0-9]{2}(\.[0-9A-Z]{1,4})?$/.test(value) ||
-                "Invalid  ICD Code"
+              const codes = value
+                .split(",")
+                .map((code) => code.toUpperCase().trim());
+              const allValid = codes.every((code) =>
+                /^[A-Z][0-9]{2}(\.[0-9A-Z]{1,4})?$/.test(code)
               );
+              return allValid || "Invalid ICD-10 Code Format";
             },
           },
         }}
