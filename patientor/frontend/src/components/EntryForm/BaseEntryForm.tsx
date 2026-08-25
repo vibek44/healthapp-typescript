@@ -80,8 +80,10 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
           validate: {
             checkAlphaCase: (value) => {
               if (!value) return true;
-              const testValues = value.replace(/[0-9.,]/g, "");
-              return /^[A-Za-z]+$/g.test(testValues) || "invalid code";
+              return (
+                /^[A-Z][0-9]{2}(\.[0-9A-Z]{1,4})?$/.test(value) ||
+                "Invalid  ICD Code"
+              );
             },
           },
         }}
