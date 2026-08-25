@@ -79,6 +79,7 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
         rules={{
           validate: {
             checkAlphaCase: (value) => {
+              if (!value) return true;
               const testValues = value.replace(/[0-9.,]/g, "");
               return /^[A-Za-z]+$/g.test(testValues) || "invalid code";
             },
@@ -90,8 +91,8 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
             type="text"
             label="diagnosisCodes"
             slotProps={{ inputLabel: { shrink: true } }}
-            error={!!errors?.specialist}
-            helperText={errors?.specialist?.message}
+            error={!!errors?.diagnosisCodes}
+            helperText={errors?.diagnosisCodes?.message}
           />
         )}
       />
@@ -107,8 +108,8 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
               label="rating"
               type="text"
               value={field.value ?? 0}
-              error={!!errors?.specialist}
-              helperText={errors?.specialist?.message}
+              error={!!errors?.healthCheckRating}
+              helperText={errors?.healthCheckRating?.message}
             >
               {Object.entries(HealthCheckRating).map(([key, value]) => (
                 <MenuItem key={value} value={value}>
@@ -133,8 +134,8 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
                 type="date"
                 label="dischargeDate"
                 slotProps={{ inputLabel: { shrink: true } }}
-                error={!!errors?.specialist}
-                helperText={errors?.specialist?.message}
+                error={!!errors?.dischargeDate}
+                helperText={errors?.dischargeDate?.message}
               />
             )}
           />
@@ -149,8 +150,8 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
                 type="text"
                 label="criteria"
                 slotProps={{ inputLabel: { shrink: true } }}
-                error={!!errors?.specialist}
-                helperText={errors?.specialist?.message}
+                error={!!errors?.criteria}
+                helperText={errors?.criteria?.message}
               />
             )}
           />
@@ -169,8 +170,8 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
                 type="text"
                 label="Employer-Name"
                 slotProps={{ inputLabel: { shrink: true } }}
-                error={!!errors?.specialist}
-                helperText={errors?.specialist?.message}
+                error={!!errors?.employerName}
+                helperText={errors?.employerName?.message}
               />
             )}
           />
