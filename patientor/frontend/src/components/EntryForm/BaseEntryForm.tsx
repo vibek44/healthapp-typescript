@@ -1,16 +1,22 @@
-import { TextField, MenuItem } from "@mui/material";
+import { TextField, MenuItem, Autocomplete } from "@mui/material";
 import { Controller, Control, FieldErrors } from "react-hook-form";
-import type { EntryFormValues } from "../../types";
+import type { EntryFormValues, Diagnoses } from "../../types";
 import { HealthCheckRating } from "../../types";
 
 interface BaseEntryProps {
   entryType: string;
   control: Control<EntryFormValues>;
   errors: FieldErrors<EntryFormValues>;
+  diagnoses: Diagnoses[];
 }
-const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
+const BaseEntryForm = ({
+  entryType,
+  control,
+  errors,
+  diagnoses,
+}: BaseEntryProps) => {
   if (!entryType) return null;
-
+  console.log(diagnoses);
   return (
     <>
       <Controller
@@ -72,35 +78,32 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
           />
         )}
       />
+
       <Controller
         name="diagnosisCodes"
-        defaultValue=""
+        defaultValue={[]}
         control={control}
-        rules={{
-          validate: {
-            checkAlphaCase: (value) => {
-              if (!value) return true;
-              const codes = value
-                .split(",")
-                .map((code) => code.toUpperCase().trim());
-              const allValid = codes.every((code) =>
-                /^[A-Z][0-9]{2}(\.[0-9A-Z]{1,4})?$/.test(code)
-              );
-              return allValid || "Invalid ICD-10 Code Format";
-            },
-          },
-        }}
-        render={({ field }) => (
-          <TextField
+        render={({ field: { onChange, value, ...field } }) => (
+          <Autocomplete
             {...field}
-            type="text"
-            label="diagnosisCodes"
-            slotProps={{ inputLabel: { shrink: true } }}
-            error={!!errors?.diagnosisCodes}
-            helperText={errors?.diagnosisCodes?.message}
+            multiple
+            options={diagnoses}
+            getOptionLabel={(option) => `${option.code} - ${option.name}`}
+            isOptionEqualToValue={(option, val) => option.code === val.code}
+            value={diagnoses.filter((d) => (value || []).includes(d.code))}
+            onChange={(_, newValue) => onChange(newValue.map((v) => v.code))}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="Diagnosis Codes"
+                error={!!errors?.diagnosisCodes}
+                helperText={errors?.diagnosisCodes?.message}
+              />
+            )}
           />
         )}
       />
+
       {entryType === "HealthCheck" && (
         <Controller
           name="healthCheckRating"
@@ -125,7 +128,6 @@ const BaseEntryForm = ({ entryType, control, errors }: BaseEntryProps) => {
           )}
         />
       )}
-
       {entryType === "Hospital" && (
         <>
           <Controller
