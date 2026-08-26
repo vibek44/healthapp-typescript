@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import BaseEntryForm from "./BaseEntryForm";
-import type { EntryFormValues } from "../../types";
+import type { EntryFormValues, Diagnoses } from "../../types";
 
 import {
   Typography,
@@ -12,9 +12,10 @@ import {
 } from "@mui/material";
 interface Props {
   handleVisibility: () => void;
+  diagnoses: Diagnoses[];
 }
 
-const AddEntryForm = ({ handleVisibility }: Props) => {
+const AddEntryForm = ({ handleVisibility, diagnoses }: Props) => {
   const {
     control,
     watch,
@@ -24,12 +25,11 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
 
   const entryType = watch("type");
 
-  // console.log(for);
-  // const formValues = watch();
-  //console.log(formValues, entryType);
-
-  const onSubmit = (data: EntryFormValues) => console.log(data);
   console.log(entryType);
+
+  const onSubmit: SubmitHandler<EntryFormValues> = (data: EntryFormValues) =>
+    console.log("validated ", data);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -69,6 +69,7 @@ const AddEntryForm = ({ handleVisibility }: Props) => {
           entryType={entryType}
           control={control}
           errors={errors}
+          diagnoses={diagnoses}
         />
       )}
       {entryType && (
