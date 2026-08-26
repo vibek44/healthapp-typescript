@@ -8,7 +8,7 @@ import AddEntryForm from "../EntryForm/AddEntryForm";
 import { useState } from "react";
 interface PatientProps {
   patient: Patient | undefined;
-  diagnoses: Diagnoses[] | undefined;
+  diagnoses: Diagnoses[];
 }
 const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   if (!patient) return undefined;
@@ -16,7 +16,7 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
   const handleVisibility = () => setVisibility(!visibility);
 
   return (
-    <Card sx={{ width: "40em", padding: "1em", margin: "auto" }}>
+    <Card sx={{ width: "43em", padding: "1em", margin: "auto" }}>
       <Grid container rowSpacing={2} direction="column">
         <Typography sx={{ my: 1 }} variant="h5">
           {patient.name}
@@ -33,7 +33,12 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
         <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
         <Divider sx={{ marginY: "1em" }} />
 
-        {visibility && <AddEntryForm handleVisibility={handleVisibility} />}
+        {visibility && (
+          <AddEntryForm
+            handleVisibility={handleVisibility}
+            diagnoses={diagnoses}
+          />
+        )}
         {!visibility && (
           <Button
             variant="contained"
