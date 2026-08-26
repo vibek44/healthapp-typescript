@@ -12,7 +12,7 @@ import {
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { PatientFormValues, Patient } from "../../types";
-import AddPatientModal from "../AddPatientModal";
+import AddPatientModal from "../AddPatientModal/index";
 
 import HealthRatingBar from "../HealthRatingBar";
 
@@ -47,6 +47,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
             ""
           );
           console.error(message);
+
           setError(message);
         } else {
           setError("Unrecognized axios error");
@@ -75,7 +76,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {Object.values(patients).map((patient: Patient) => (
+          {patients.map((patient: Patient) => (
             <TableRow key={patient.id}>
               <TableCell>
                 <Link to={`/patients/${patient.id}`}>{patient.name} </Link>
