@@ -16,7 +16,7 @@ const BaseEntryForm = ({
   diagnoses,
 }: BaseEntryProps) => {
   if (!entryType) return null;
-  console.log(diagnoses);
+  //console.log(diagnoses);
   return (
     <>
       <Controller
@@ -41,7 +41,10 @@ const BaseEntryForm = ({
         control={control}
         rules={{
           required: "Description is required",
-          minLength: 6,
+          minLength: {
+            value: 6,
+            message: "description needs to be atleast 6 character long",
+          },
           maxLength: {
             value: 30,
             message: "description cannot  exceed 30 charactor",
@@ -64,8 +67,11 @@ const BaseEntryForm = ({
         control={control}
         rules={{
           required: "specialist is required",
-          minLength: 3,
-          maxLength: 15,
+          minLength: {
+            value: 3,
+            message: "specialist should be atleast 3 character long",
+          },
+          maxLength: { value: 20, message: "maximum 30 character" },
         }}
         render={({ field }) => (
           <TextField
@@ -88,10 +94,10 @@ const BaseEntryForm = ({
             {...field}
             multiple
             options={diagnoses}
-            getOptionLabel={(option) => `${option.code} - ${option.name}`}
-            isOptionEqualToValue={(option, val) => option.code === val.code}
             value={diagnoses.filter((d) => (value || []).includes(d.code))}
             onChange={(_, newValue) => onChange(newValue.map((v) => v.code))}
+            getOptionLabel={(option) => `${option.code} - ${option.name}`}
+            isOptionEqualToValue={(option, val) => option.code === val.code}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -150,7 +156,15 @@ const BaseEntryForm = ({
             name="criteria"
             defaultValue=""
             control={control}
-            rules={{ required: "criteria is missing" }}
+            rules={{
+              required: "criteria is missing",
+              validate: (val) => {
+                if (val)
+                  return (
+                    val.length > 10 || "criteria field needs proper explanation"
+                  );
+              },
+            }}
             render={({ field }) => (
               <TextField
                 {...field}
