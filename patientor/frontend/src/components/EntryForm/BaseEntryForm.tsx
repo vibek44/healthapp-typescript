@@ -27,8 +27,9 @@ const BaseEntryForm = ({
         render={({ field }) => (
           <TextField
             {...field}
+            required
             type="date"
-            label="date"
+            label="Date"
             slotProps={{ inputLabel: { shrink: true } }}
             error={!!errors?.date}
             helperText={errors?.date?.message}
@@ -53,8 +54,9 @@ const BaseEntryForm = ({
         render={({ field }) => (
           <TextField
             {...field}
+            required
             type="text"
-            label="description"
+            label="Description"
             slotProps={{ inputLabel: { shrink: true } }}
             error={!!errors?.description}
             helperText={errors?.description?.message}
@@ -76,8 +78,9 @@ const BaseEntryForm = ({
         render={({ field }) => (
           <TextField
             {...field}
+            required
             type="text"
-            label="specialist"
+            label="Specialist"
             slotProps={{ inputLabel: { shrink: true } }}
             error={!!errors?.specialist}
             helperText={errors?.specialist?.message}
@@ -102,6 +105,7 @@ const BaseEntryForm = ({
               <TextField
                 {...params}
                 label="Diagnosis Codes"
+                slotProps={{ inputLabel: { shrink: true } }}
                 error={!!errors?.diagnosisCodes}
                 helperText={errors?.diagnosisCodes?.message}
               />
@@ -144,6 +148,7 @@ const BaseEntryForm = ({
             render={({ field }) => (
               <TextField
                 {...field}
+                required
                 type="date"
                 label="dischargeDate"
                 slotProps={{ inputLabel: { shrink: true } }}
@@ -168,6 +173,7 @@ const BaseEntryForm = ({
             render={({ field }) => (
               <TextField
                 {...field}
+                required
                 type="text"
                 label="criteria"
                 slotProps={{ inputLabel: { shrink: true } }}
@@ -188,6 +194,7 @@ const BaseEntryForm = ({
             render={({ field }) => (
               <TextField
                 {...field}
+                required
                 type="text"
                 label="Employer-Name"
                 slotProps={{ inputLabel: { shrink: true } }}
@@ -204,7 +211,7 @@ const BaseEntryForm = ({
               <TextField
                 {...field}
                 type="date"
-                label="startDate"
+                label="StartDate"
                 slotProps={{ inputLabel: { shrink: true } }}
               />
             )}
@@ -217,7 +224,7 @@ const BaseEntryForm = ({
               <TextField
                 {...field}
                 type="date"
-                label="endDate"
+                label="EndDate"
                 slotProps={{ inputLabel: { shrink: true } }}
               />
             )}
