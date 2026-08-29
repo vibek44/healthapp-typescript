@@ -84,7 +84,7 @@ export interface Patient {
 
 export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
-export interface EntryFormValues {
+/*export interface EntryFormValues {
   type: string;
   date: string;
   description: string;
@@ -99,4 +99,34 @@ export interface EntryFormValues {
   employerName?: string;
   startDate?: string;
   endDate?: string;
+}*/
+
+interface BaseEntryFormValues {
+  date: string;
+  description: string;
+  specialist: string;
+  diagnosisCodes: string[];
 }
+
+export interface HealthCheckFormValues extends BaseEntryFormValues {
+  type: "HealthCheck" | "";
+  healthCheckRating: HealthCheckRating;
+}
+
+export interface HospitalFormValues extends BaseEntryFormValues {
+  type: "Hospital";
+  dischargeDate: string;
+  criteria: string;
+}
+
+export interface OccupationalHealthcareFormValues extends BaseEntryFormValues {
+  type: "OccupationalHealthcare";
+  employerName: string;
+  startDate: string;
+  endDate: string;
+}
+
+export type EntryFormValues =
+  | HealthCheckFormValues
+  | HospitalFormValues
+  | OccupationalHealthcareFormValues;
