@@ -1,7 +1,11 @@
-import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import BaseEntryForm from "./BaseEntryForm";
-import type { EntryFormValues, Diagnoses, Patient } from "../../types";
-
+import type {
+  Diagnoses,
+  EntryFormValues,
+  HospitalFormValues,
+  Patient,
+} from "../../types";
 import {
   Typography,
   Divider,
@@ -10,7 +14,8 @@ import {
   Grid,
   Button,
 } from "@mui/material";
-import { getDefaultValues } from "../../utils";
+import getDefaultValues from "../../utils";
+
 interface Props {
   patient: Patient;
   setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
@@ -24,20 +29,38 @@ const AddEntryForm = ({
   patient,
   setPatient,
 }: Props) => {
-  let entryType: EntryFormValues["type"] = "HealthCheck";
-
   const {
     control,
     watch,
     reset,
-    handleSubmit,
     formState: { errors },
-  } = useForm<EntryFormValues>({ defaultValues: getDefaultValues(entryType) });
+    handleSubmit,
+  } = useForm<EntryFormValues>({
+    defaultValues: getDefaultValues("HealthCheck"),
+  });
 
-  entryType = watch("type");
+  const entryType = watch("type");
+  const onSubmit = (data: EntryFormValues) => {
+    if (data.type === "Hospital") {
+      const { dischargeDate, criteria, ...rest } = data;
 
-  const onSubmit: SubmitHandler<EntryFormValues> = (data: EntryFormValues) => {
-    console.log(data);
+      const hospitalData = {
+        ...rest,
+        discharge: { date: dischargeDate, criteria },
+      };
+      console.log("Hos", hospitalData);
+      return;
+    }
+    if (data.type === "OccupationalHealthcare") {
+      console.log("Occu", data);
+      const { startDate, endDate, ...rest } = data;
+      const occupationalData = {
+        ...rest,
+        sickLeave: { startDate, endDate },
+      };
+      return;
+    }
+    console.log("Heal", data);
   };
 
   return (
@@ -52,28 +75,29 @@ const AddEntryForm = ({
     >
       <Typography variant="h5">New Entry Form</Typography>
       <Divider />
+
       {entryType && (
         <Typography variant="subtitle1" color="info" fontFamily="unset">
           Field with * are required
         </Typography>
       )}
+
       <Divider sx={{ marginY: "1em" }} />
+
       <Controller
         name="type"
         control={control}
         render={({ field }) => (
           <TextField
             {...field}
-            select
             value={field.value ?? ""}
             onChange={(e) => {
-              const newValue = e.target.value as EntryFormValues["type"];
-              field.onChange(newValue);
-              reset(getDefaultValues(newValue));
+              const newType = e.target.value as EntryFormValues["type"];
+              reset(getDefaultValues(newType));
             }}
+            select
             label="Select Entry-Type"
           >
-            <MenuItem value="">Select Entry type </MenuItem>
             <MenuItem value="HealthCheck">HelathCheck </MenuItem>
             <MenuItem value="Hospital">Hospital </MenuItem>
             <MenuItem value="OccupationalHealthcare">
@@ -91,6 +115,7 @@ const AddEntryForm = ({
           diagnoses={diagnoses}
         />
       )}
+
       {entryType && (
         <Grid container justifyContent="space-between">
           <Button variant="contained" type="submit">
