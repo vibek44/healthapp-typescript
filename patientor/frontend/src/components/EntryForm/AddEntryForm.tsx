@@ -1,6 +1,6 @@
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import BaseEntryForm from "./BaseEntryForm";
-import type { EntryFormValues, Diagnoses } from "../../types";
+import type { EntryFormValues, Diagnoses, Patient } from "../../types";
 
 import {
   Typography,
@@ -10,25 +10,35 @@ import {
   Grid,
   Button,
 } from "@mui/material";
+import { getDefaultValues } from "../../utils";
 interface Props {
+  patient: Patient;
+  setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
   handleVisibility: () => void;
   diagnoses: Diagnoses[];
 }
 
-const AddEntryForm = ({ handleVisibility, diagnoses }: Props) => {
+const AddEntryForm = ({
+  handleVisibility,
+  diagnoses,
+  patient,
+  setPatient,
+}: Props) => {
+  let entryType: EntryFormValues["type"] = "HealthCheck";
+
   const {
     control,
     watch,
+    reset,
     handleSubmit,
     formState: { errors },
-  } = useForm<EntryFormValues>();
+  } = useForm<EntryFormValues>({ defaultValues: getDefaultValues(entryType) });
 
-  const entryType = watch("type");
+  entryType = watch("type");
 
-  console.log(entryType);
-
-  const onSubmit: SubmitHandler<EntryFormValues> = (data: EntryFormValues) =>
-    console.log("validated ", data);
+  const onSubmit: SubmitHandler<EntryFormValues> = (data: EntryFormValues) => {
+    console.log(data);
+  };
 
   return (
     <form
@@ -50,10 +60,19 @@ const AddEntryForm = ({ handleVisibility, diagnoses }: Props) => {
       <Divider sx={{ marginY: "1em" }} />
       <Controller
         name="type"
-        defaultValue=""
         control={control}
         render={({ field }) => (
-          <TextField {...field} select label="Select Entry-Type">
+          <TextField
+            {...field}
+            select
+            value={field.value ?? ""}
+            onChange={(e) => {
+              const newValue = e.target.value as EntryFormValues["type"];
+              field.onChange(newValue);
+              reset(getDefaultValues(newValue));
+            }}
+            label="Select Entry-Type"
+          >
             <MenuItem value="">Select Entry type </MenuItem>
             <MenuItem value="HealthCheck">HelathCheck </MenuItem>
             <MenuItem value="Hospital">Hospital </MenuItem>

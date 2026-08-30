@@ -109,7 +109,7 @@ interface BaseEntryFormValues {
 }
 
 export interface HealthCheckFormValues extends BaseEntryFormValues {
-  type: "HealthCheck" | "";
+  type: "HealthCheck";
   healthCheckRating: HealthCheckRating;
 }
 
