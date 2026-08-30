@@ -1,10 +1,16 @@
 import { TextField, MenuItem, Autocomplete } from "@mui/material";
 import { Controller, Control, FieldErrors } from "react-hook-form";
-import type { EntryFormValues, Diagnoses } from "../../types";
+import type {
+  EntryFormValues,
+  Diagnoses,
+  HealthCheckFormValues,
+  HospitalFormValues,
+  OccupationalHealthcareFormValues,
+} from "../../types";
 import { HealthCheckRating } from "../../types";
 
 interface BaseEntryProps {
-  entryType: string;
+  entryType: EntryFormValues["type"];
   control: Control<EntryFormValues>;
   errors: FieldErrors<EntryFormValues>;
   diagnoses: Diagnoses[];
@@ -15,7 +21,6 @@ const BaseEntryForm = ({
   errors,
   diagnoses,
 }: BaseEntryProps) => {
-  if (!entryType) return null;
   //console.log(diagnoses);
   return (
     <>
@@ -113,126 +118,273 @@ const BaseEntryForm = ({
           />
         )}
       />
-
-      {entryType === "HealthCheck" && (
-        <Controller
-          name="healthCheckRating"
-          defaultValue={0}
-          control={control}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              select
-              label="rating"
-              type="text"
-              value={field.value ?? 0}
-              error={!!errors?.healthCheckRating}
-              helperText={errors?.healthCheckRating?.message}
-            >
-              {Object.entries(HealthCheckRating).map(([key, value]) => (
-                <MenuItem key={value} value={value}>
-                  {key} - {value}
-                </MenuItem>
-              ))}
-            </TextField>
-          )}
-        />
-      )}
-      {entryType === "Hospital" && (
-        <>
-          <Controller
-            name="dischargeDate"
-            defaultValue=""
-            control={control}
-            rules={{ required: "DischargeDate is missing" }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                required
-                type="date"
-                label="dischargeDate"
-                slotProps={{ inputLabel: { shrink: true } }}
-                error={!!errors?.dischargeDate}
-                helperText={errors?.dischargeDate?.message}
+      {entryType === "HealthCheck" &&
+        (() => {
+          const healthCheckErrors =
+            errors as FieldErrors<HealthCheckFormValues>;
+          return (
+            <Controller
+              name="healthCheckRating"
+              defaultValue={0}
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  label="rating"
+                  type="text"
+                  value={field.value ?? 0}
+                  error={!!healthCheckErrors?.healthCheckRating}
+                  helperText={healthCheckErrors?.healthCheckRating?.message}
+                >
+                  {Object.entries(HealthCheckRating).map(([key, value]) => (
+                    <MenuItem key={value} value={value}>
+                      {key} - {value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          );
+        })()}
+      {entryType === "Hospital" &&
+        (() => {
+          const hospitalErrors = errors as FieldErrors<HospitalFormValues>;
+          return (
+            <>
+              <Controller
+                name="dischargeDate"
+                defaultValue=""
+                control={control}
+                rules={{ required: "DischargeDate is missing" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    type="date"
+                    label="dischargeDate"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    error={!!hospitalErrors?.dischargeDate}
+                    helperText={hospitalErrors?.dischargeDate?.message}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="criteria"
-            defaultValue=""
-            control={control}
-            rules={{
-              required: "criteria is missing",
-              validate: (val) => {
-                if (val)
-                  return (
-                    val.length > 10 || "criteria field needs proper explanation"
-                  );
-              },
-            }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                required
-                type="text"
-                label="criteria"
-                slotProps={{ inputLabel: { shrink: true } }}
-                error={!!errors?.criteria}
-                helperText={errors?.criteria?.message}
+              <Controller
+                name="criteria"
+                defaultValue=""
+                control={control}
+                rules={{
+                  required: "criteria is missing",
+                  validate: (val) => {
+                    if (val)
+                      return (
+                        val.length > 10 ||
+                        "criteria field needs proper explanation"
+                      );
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    type="text"
+                    label="criteria"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    error={!!hospitalErrors?.criteria}
+                    helperText={hospitalErrors?.criteria?.message}
+                  />
+                )}
               />
-            )}
-          />
-        </>
-      )}
-      {entryType === "OccupationalHealthcare" && (
-        <>
-          <Controller
-            name="employerName"
-            defaultValue=""
-            control={control}
-            rules={{ required: "Employername is missing" }}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                required
-                type="text"
-                label="Employer-Name"
-                slotProps={{ inputLabel: { shrink: true } }}
-                error={!!errors?.employerName}
-                helperText={errors?.employerName?.message}
+            </>
+          );
+        })()}
+      {entryType === "OccupationalHealthcare" &&
+        (() => {
+          const occupationalErrors =
+            errors as FieldErrors<OccupationalHealthcareFormValues>;
+          return (
+            <>
+              <Controller
+                name="employerName"
+                defaultValue=""
+                control={control}
+                rules={{ required: "Employername is missing" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    type="text"
+                    label="Employer-Name"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    error={!!occupationalErrors?.employerName}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="startDate"
-            defaultValue=""
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="date"
-                label="StartDate"
-                slotProps={{ inputLabel: { shrink: true } }}
+              <Controller
+                name="startDate"
+                defaultValue=""
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="date"
+                    label="StartDate"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                  />
+                )}
               />
-            )}
-          />
-          <Controller
-            name="endDate"
-            defaultValue=""
-            control={control}
-            render={({ field }) => (
-              <TextField
-                {...field}
-                type="date"
-                label="EndDate"
-                slotProps={{ inputLabel: { shrink: true } }}
+              <Controller
+                name="endDate"
+                defaultValue=""
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="date"
+                    label="EndDate"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                  />
+                )}
               />
-            )}
-          />
-        </>
-      )}
+            </>
+          );
+        })()}
     </>
   );
 };
 
 export default BaseEntryForm;
+
+/*
+{entryType === "HealthCheck" &&
+        (() => {
+          const healthCheckErrors =
+            errors as FieldErrors<HealthCheckFormValues>;
+          return (
+            <Controller
+              name="healthCheckRating"
+              defaultValue={0}
+              control={control}
+              render={({ field }) => (
+                <TextField
+                  {...field}
+                  select
+                  label="rating"
+                  type="text"
+                  value={field.value ?? 0}
+                  error={!!healthCheckErrors?.healthCheckRating}
+                  helperText={healthCheckErrors?.healthCheckRating?.message}
+                >
+                  {Object.entries(HealthCheckRating).map(([key, value]) => (
+                    <MenuItem key={value} value={value}>
+                      {key} - {value}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
+            />
+          );
+        })()}
+      {entryType === "Hospital" &&
+        (() => {
+          const hospitalErrors = errors as FieldErrors<HospitalFormValues>;
+          return (
+            <>
+              <Controller
+                name="dischargeDate"
+                defaultValue=""
+                control={control}
+                rules={{ required: "DischargeDate is missing" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    type="date"
+                    label="dischargeDate"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    error={!!hospitalErrors?.dischargeDate}
+                    helperText={hospitalErrors?.dischargeDate?.message}
+                  />
+                )}
+              />
+              <Controller
+                name="criteria"
+                defaultValue=""
+                control={control}
+                rules={{
+                  required: "criteria is missing",
+                  validate: (val) => {
+                    if (val)
+                      return (
+                        val.length > 10 ||
+                        "criteria field needs proper explanation"
+                      );
+                  },
+                }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    type="text"
+                    label="criteria"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    error={!!hospitalErrors?.criteria}
+                    helperText={hospitalErrors?.criteria?.message}
+                  />
+                )}
+              />
+            </>
+          );
+        })()}
+      {entryType === "OccupationalHealthcare" &&
+        (() => {
+          const occupationalErrors =
+            errors as FieldErrors<OccupationalHealthcareFormValues>;
+          return (
+            <>
+              <Controller
+                name="employerName"
+                defaultValue=""
+                control={control}
+                rules={{ required: "Employername is missing" }}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    required
+                    type="text"
+                    label="Employer-Name"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                    error={!!occupationalErrors?.employerName}
+                  />
+                )}
+              />
+              <Controller
+                name="startDate"
+                defaultValue=""
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="date"
+                    label="StartDate"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                  />
+                )}
+              />
+              <Controller
+                name="endDate"
+                defaultValue=""
+                control={control}
+                render={({ field }) => (
+                  <TextField
+                    {...field}
+                    type="date"
+                    label="EndDate"
+                    slotProps={{ inputLabel: { shrink: true } }}
+                  />
+                )}
+              />
+            </>
+          );
+        })()}
+*/
