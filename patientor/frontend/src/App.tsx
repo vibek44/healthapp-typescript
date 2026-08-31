@@ -2,10 +2,8 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { Route, Link, Routes, useMatch } from "react-router-dom";
 import { Button, Divider, Container, Typography } from "@mui/material";
-
 import { apiBaseUrl } from "./constants";
 import { Patient, Diagnoses } from "./types";
-
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
 import PatientInfoPage from "./components/PatientInfoPage";
@@ -20,21 +18,15 @@ const App = () => {
 
   useEffect(() => {
     void axios.get<void>(`${apiBaseUrl}/ping`);
-    let isActive = true;
     const fetchPatientList = async () => {
       const [patientsData, diagnosesData] = await Promise.all([
         patientService.getAll(),
         patientService.getDiagnoses(),
       ]);
-      if (isActive) {
-        setPatients(patientsData);
-        setDiagnoses(diagnosesData);
-      }
+      setPatients(patientsData);
+      setDiagnoses(diagnosesData);
     };
     void fetchPatientList();
-    return () => {
-      isActive = false;
-    };
   }, []);
   useEffect(() => {
     if (!patientId || patientId === lastFetchedId.current) return;
@@ -67,7 +59,11 @@ const App = () => {
           <Route
             path="/patients/:id"
             element={
-              <PatientInfoPage patient={patient} diagnoses={diagnoses} />
+              <PatientInfoPage
+                setPatient={setPatient}
+                patient={patient}
+                diagnoses={diagnoses}
+              />
             }
           />
 
