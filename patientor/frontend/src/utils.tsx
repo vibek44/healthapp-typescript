@@ -1,7 +1,12 @@
+import type { EntryFormValues } from "./types";
+
 const assertNever = (value: never): never => {
   throw new Error(`unhandled Case ${value}`);
 };
-export const getDefaultValues = (entryType: unknown) => {
+
+const getDefaultValues = (
+  entryType: EntryFormValues["type"]
+): EntryFormValues => {
   if (typeof entryType !== "string") throw new Error("not string type");
   if (
     entryType !== "HealthCheck" &&
@@ -9,22 +14,41 @@ export const getDefaultValues = (entryType: unknown) => {
     entryType !== "OccupationalHealthcare"
   )
     throw new Error("not entry type");
-  const base = {
-    type: entryType,
-    date: "",
-    description: "",
-    specialist: "",
-    diagnosisCodes: "",
-  };
 
   switch (entryType) {
     case "Hospital":
-      return { ...base, dischargeDate: "", criteria: "" };
+      return {
+        type: "Hospital",
+        date: "",
+        description: "",
+        specialist: "",
+        diagnosisCodes: [],
+        dischargeDate: "",
+        criteria: "",
+      };
     case "HealthCheck":
-      return { ...base, healthCheckRating: 0 };
+      return {
+        type: "HealthCheck",
+        date: "",
+        description: "",
+        specialist: "",
+        diagnosisCodes: [],
+        healthCheckRating: 0,
+      };
     case "OccupationalHealthcare":
-      return { ...base, employerName: "", startDate: "", endDate: "" };
+      return {
+        type: "OccupationalHealthcare",
+        date: "",
+        description: "",
+        specialist: "",
+        diagnosisCodes: [],
+        employerName: "",
+        startDate: "",
+        endDate: "",
+      };
     default:
       return assertNever(entryType);
   }
 };
+
+export default getDefaultValues;
