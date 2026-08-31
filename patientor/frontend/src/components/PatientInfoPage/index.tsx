@@ -9,9 +9,10 @@ import { useState } from "react";
 interface PatientProps {
   patient: Patient | undefined;
   diagnoses: Diagnoses[];
+  setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
 }
-const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
-  if (!patient) return undefined;
+const PatientInfoPage = ({ patient, diagnoses, setPatient }: PatientProps) => {
+  if (!patient) return null;
   const [visibility, setVisibility] = useState<boolean>(false);
   const handleVisibility = () => setVisibility(!visibility);
 
@@ -37,6 +38,8 @@ const PatientInfoPage = ({ patient, diagnoses }: PatientProps) => {
           <AddEntryForm
             handleVisibility={handleVisibility}
             diagnoses={diagnoses}
+            patient={patient}
+            setPatient={setPatient}
           />
         )}
         {!visibility && (
