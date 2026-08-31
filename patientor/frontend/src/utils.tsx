@@ -15,33 +15,31 @@ const getDefaultValues = (
   )
     throw new Error("not entry type");
 
+  const baseField = {
+    date: "",
+    description: "",
+    specialist: "",
+    diagnosisCodes: [],
+  };
+
   switch (entryType) {
     case "Hospital":
       return {
-        type: "Hospital",
-        date: "",
-        description: "",
-        specialist: "",
-        diagnosisCodes: [],
+        ...baseField,
+        type: entryType,
         dischargeDate: "",
         criteria: "",
       };
     case "HealthCheck":
       return {
-        type: "HealthCheck",
-        date: "",
-        description: "",
-        specialist: "",
-        diagnosisCodes: [],
+        ...baseField,
+        type: entryType,
         healthCheckRating: 0,
       };
     case "OccupationalHealthcare":
       return {
-        type: "OccupationalHealthcare",
-        date: "",
-        description: "",
-        specialist: "",
-        diagnosisCodes: [],
+        ...baseField,
+        type: entryType,
         employerName: "",
         startDate: "",
         endDate: "",
