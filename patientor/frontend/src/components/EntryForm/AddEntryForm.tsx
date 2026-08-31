@@ -1,11 +1,6 @@
 import { Controller, useForm } from "react-hook-form";
 import BaseEntryForm from "./BaseEntryForm";
-import type {
-  Diagnoses,
-  EntryFormValues,
-  HospitalFormValues,
-  Patient,
-} from "../../types";
+import type { Diagnoses, EntryFormValues, Patient } from "../../types";
 import {
   Typography,
   Divider,
@@ -15,6 +10,8 @@ import {
   Button,
 } from "@mui/material";
 import getDefaultValues from "../../utils";
+import patientService from "../../services/patients";
+import axios from "axios";
 
 interface Props {
   patient: Patient;
@@ -38,29 +35,59 @@ const AddEntryForm = ({
   } = useForm<EntryFormValues>({
     defaultValues: getDefaultValues("HealthCheck"),
   });
-
   const entryType = watch("type");
-  const onSubmit = (data: EntryFormValues) => {
-    if (data.type === "Hospital") {
-      const { dischargeDate, criteria, ...rest } = data;
+  const onSubmit = async (data: EntryFormValues) => {
+    try {
+      if (data.type === "Hospital") {
+        const { dischargeDate, criteria, ...rest } = data;
+        const hospitalData = {
+          ...rest,
+          discharge: { date: dischargeDate, criteria },
+        };
+        const result = await patientService.createEntry(
+          hospitalData,
+          patient.id
+        );
 
-      const hospitalData = {
-        ...rest,
-        discharge: { date: dischargeDate, criteria },
-      };
-      console.log("Hos", hospitalData);
-      return;
+        setPatient({ ...patient, entries: [...patient.entries, result] });
+        handleVisibility();
+        return;
+      }
+      if (data.type === "OccupationalHealthcare") {
+        const { startDate, endDate, ...rest } = data;
+        const occupationalData = {
+          ...rest,
+          sickLeave: { startDate, endDate },
+        };
+        const result = await patientService.createEntry(
+          occupationalData,
+          patient.id
+        );
+        setPatient({ ...patient, entries: [...patient.entries, result] });
+        handleVisibility();
+        return;
+      }
+      if (data.type === "HealthCheck") {
+        const result = await patientService.createEntry(data, patient.id);
+        setPatient({ ...patient, entries: [...patient.entries, result] });
+        handleVisibility();
+        return;
+      }
+    } catch (e: unknown) {
+      if (axios.isAxiosError(e)) {
+        if (e?.response?.data && typeof e?.response?.data === "string") {
+          const message = e.response.data.replace(
+            "Something went wrong. Error: ",
+            ""
+          );
+          console.error(message);
+        } else {
+          console.log("unrecognized error");
+        }
+      } else {
+        console.error("Unknown error", e);
+      }
     }
-    if (data.type === "OccupationalHealthcare") {
-      console.log("Occu", data);
-      const { startDate, endDate, ...rest } = data;
-      const occupationalData = {
-        ...rest,
-        sickLeave: { startDate, endDate },
-      };
-      return;
-    }
-    console.log("Heal", data);
   };
 
   return (
