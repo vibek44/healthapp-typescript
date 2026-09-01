@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import BaseEntryForm from "./BaseEntryForm";
 import type { Diagnoses, EntryFormValues, Patient } from "../../types";
@@ -12,7 +13,10 @@ import {
 import getDefaultValues from "../../utils";
 import patientService from "../../services/patients";
 import axios from "axios";
-
+interface Error {
+  message: string;
+  path: string[];
+}
 interface Props {
   patient: Patient;
   setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
@@ -26,6 +30,7 @@ const AddEntryForm = ({
   patient,
   setPatient,
 }: Props) => {
+  const [error, setError] = useState<string[] | string | undefined>(undefined);
   const {
     control,
     watch,
@@ -75,17 +80,27 @@ const AddEntryForm = ({
       }
     } catch (e: unknown) {
       if (axios.isAxiosError(e)) {
+        console.log(e.response);
         if (e?.response?.data && typeof e?.response?.data === "string") {
           const message = e.response.data.replace(
             "Something went wrong. Error: ",
             ""
           );
-          console.error(message);
+          setError(message);
+        } else if (e?.response?.data && typeof e?.response?.data === "object") {
+          if (Array.isArray(e.response.data.error)) {
+            const customError = e.response.data.error.map((el: Error) => (
+              <li style={{ color: "red" }}>
+                {el.path[0]}:{el.message}
+              </li>
+            ));
+            setError(customError);
+          }
         } else {
-          console.log("unrecognized error");
+          setError("unrecognized error");
         }
       } else {
-        console.error("Unknown error", e);
+        setError("Unknown error");
       }
     }
   };
@@ -109,6 +124,8 @@ const AddEntryForm = ({
         </Typography>
       )}
 
+      <Divider sx={{ marginY: "0.5em" }} />
+      {error && error}
       <Divider sx={{ marginY: "1em" }} />
 
       <Controller
