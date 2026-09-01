@@ -17,7 +17,10 @@ import AddPatientModal from "../AddPatientModal/index";
 import HealthRatingBar from "../HealthRatingBar";
 
 import patientService from "../../services/patients";
-
+interface Error {
+  message: string;
+  path: string[];
+}
 interface Props {
   patients: Patient[];
   setPatients: React.Dispatch<React.SetStateAction<Patient[]>>;
@@ -36,7 +39,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
 
   const submitNewPatient = async (values: PatientFormValues) => {
     try {
-      const patient = await patientService.create(values);
+      const patient = await patientService.createPatient(values);
       setPatients(patients.concat(patient));
       setModalOpen(false);
     } catch (e: unknown) {
@@ -49,6 +52,15 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
           console.error(message);
 
           setError(message);
+        } else if (e?.response?.data && typeof e?.response?.data === "object") {
+          if (Array.isArray(e.response.data.error)) {
+            const customError = e.response.data.error.map((el: Error) => (
+              <li key={el.path[0]} style={{ color: "red" }}>
+                {el.path[0]}:{el.message}
+              </li>
+            ));
+            setError(customError);
+          }
         } else {
           setError("Unrecognized axios error");
         }
