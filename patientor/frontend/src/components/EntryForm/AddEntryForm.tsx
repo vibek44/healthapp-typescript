@@ -90,7 +90,7 @@ const AddEntryForm = ({
         } else if (e?.response?.data && typeof e?.response?.data === "object") {
           if (Array.isArray(e.response.data.error)) {
             const customError = e.response.data.error.map((el: Error) => (
-              <li style={{ color: "red" }}>
+              <li key={el.path[0]} style={{ color: "red" }}>
                 {el.path[0]}:{el.message}
               </li>
             ));
