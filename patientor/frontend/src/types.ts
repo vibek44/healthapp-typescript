@@ -9,6 +9,19 @@ export interface Diagnoses {
   name: string;
   latin?: string;
 }
+
+export interface Patient {
+  id: string;
+  name: string;
+  occupation: string;
+  gender: Gender;
+  ssn?: string;
+  dateOfBirth?: string;
+  entries: Entry[];
+}
+
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
+
 interface BaseEntry {
   id: string;
   date: string;
@@ -71,18 +84,6 @@ export interface HealthCheckEntryProps extends EntryDetailsProps {
 export interface HospitalEntryProps extends EntryDetailsProps {
   entry: HospitalEntry;
 }
-
-export interface Patient {
-  id: string;
-  name: string;
-  occupation: string;
-  gender: Gender;
-  ssn?: string;
-  dateOfBirth?: string;
-  entries: Entry[];
-}
-
-export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
 /*export interface EntryFormValues {
   type: string;
