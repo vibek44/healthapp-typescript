@@ -17,7 +17,7 @@ const AddEntryModal = ({
   diagnoses,
 }: AddEntryProps) => {
   return (
-    <Dialog fullWidth={true} maxWidth="md" open={open}>
+    <Dialog fullWidth={true} open={open}>
       <DialogTitle sx={{ marginX: "auto" }}>New Entry Form</DialogTitle>
       <Divider sx={{ marginTop: "0.5em" }} />
       <AddEntryForm
