@@ -9,6 +9,7 @@ import {
   TextField,
   Grid,
   Button,
+  Alert,
 } from "@mui/material";
 import getDefaultValues from "../../utils";
 import patientService from "../../services/patients";
@@ -20,16 +21,11 @@ interface Error {
 interface Props {
   patient: Patient;
   setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
-  handleVisibility: () => void;
+  onClose: () => void;
   diagnoses: Diagnoses[];
 }
 
-const AddEntryForm = ({
-  handleVisibility,
-  diagnoses,
-  patient,
-  setPatient,
-}: Props) => {
+const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
   const [error, setError] = useState<string[] | string | undefined>(undefined);
   const {
     control,
@@ -55,7 +51,7 @@ const AddEntryForm = ({
         );
 
         setPatient({ ...patient, entries: [...patient.entries, result] });
-        handleVisibility();
+        onClose();
         return;
       }
       if (data.type === "OccupationalHealthcare") {
@@ -69,13 +65,13 @@ const AddEntryForm = ({
           patient.id
         );
         setPatient({ ...patient, entries: [...patient.entries, result] });
-        handleVisibility();
+        onClose();
         return;
       }
       if (data.type === "HealthCheck") {
         const result = await patientService.createEntry(data, patient.id);
         setPatient({ ...patient, entries: [...patient.entries, result] });
-        handleVisibility();
+        onClose();
         return;
       }
     } catch (e: unknown) {
@@ -111,21 +107,22 @@ const AddEntryForm = ({
       style={{
         display: "grid",
         gap: "1em",
-        border: "2px dashed ",
-        padding: "3em",
+        border: "2px",
+        padding: "1em",
       }}
     >
-      <Typography variant="h5">New Entry Form</Typography>
-      <Divider />
+      {error && <Alert severity="error">{error}</Alert>}
 
       {entryType && (
-        <Typography variant="subtitle1" color="info" fontFamily="unset">
+        <Typography
+          sx={{ margin: "auto" }}
+          variant="subtitle1"
+          color="info"
+          fontFamily="unset"
+        >
           Field with * are required
         </Typography>
       )}
-
-      <Divider sx={{ marginY: "0.5em" }} />
-      {error && error}
       <Divider sx={{ marginY: "1em" }} />
 
       <Controller
@@ -134,12 +131,12 @@ const AddEntryForm = ({
         render={({ field }) => (
           <TextField
             {...field}
+            select
             value={field.value ?? ""}
             onChange={(e) => {
               const newType = e.target.value as EntryFormValues["type"];
               reset(getDefaultValues(newType));
             }}
-            select
             label="Select Entry-Type"
           >
             <MenuItem value="HealthCheck">HelathCheck </MenuItem>
@@ -166,7 +163,7 @@ const AddEntryForm = ({
             SUBMIT
           </Button>
           <Button
-            onClick={handleVisibility} //handleVisibility
+            onClick={onClose} //handleVisibility
             variant="contained"
             color="secondary"
             type="button"
