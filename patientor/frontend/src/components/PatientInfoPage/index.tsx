@@ -4,7 +4,7 @@ import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
 import TransGenderIcon from "@mui/icons-material/Female";
 import EntryDetails from "./EntryDetails";
-import AddEntryForm from "../EntryForm/AddEntryForm";
+import AddEntryModal from "../EntryForm";
 import { useState } from "react";
 interface PatientProps {
   patient: Patient | undefined;
@@ -13,11 +13,16 @@ interface PatientProps {
 }
 const PatientInfoPage = ({ patient, diagnoses, setPatient }: PatientProps) => {
   if (!patient) return null;
-  const [visibility, setVisibility] = useState<boolean>(false);
-  const handleVisibility = () => setVisibility(!visibility);
+  const [modalState, setModalState] = useState<boolean>(false);
+  const onModalClose = () => {
+    setModalState(false);
+  };
+  const onModalOpen = () => {
+    setModalState(true);
+  };
 
   return (
-    <Card sx={{ width: "43em", padding: "1em", margin: "auto" }}>
+    <Card sx={{ width: "50em", padding: "1em", margin: "auto" }}>
       <Grid container rowSpacing={2} direction="column">
         <Typography sx={{ my: 1 }} variant="h5">
           {patient.name}
@@ -34,23 +39,20 @@ const PatientInfoPage = ({ patient, diagnoses, setPatient }: PatientProps) => {
         <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
         <Divider sx={{ marginY: "1em" }} />
 
-        {visibility && (
-          <AddEntryForm
-            handleVisibility={handleVisibility}
-            diagnoses={diagnoses}
-            patient={patient}
-            setPatient={setPatient}
-          />
-        )}
-        {!visibility && (
-          <Button
-            variant="contained"
-            sx={{ marginX: "auto" }}
-            onClick={() => setVisibility(!visibility)}
-          >
-            CREATE NEW ENTRY
-          </Button>
-        )}
+        <AddEntryModal
+          open={modalState}
+          onClose={onModalClose}
+          diagnoses={diagnoses}
+          patient={patient}
+          setPatient={setPatient}
+        />
+        <Button
+          variant="contained"
+          sx={{ marginX: "auto" }}
+          onClick={onModalOpen}
+        >
+          CREATE NEW ENTRY
+        </Button>
 
         <Typography variant="h6" sx={{ marginY: 5 }}>
           Entries
