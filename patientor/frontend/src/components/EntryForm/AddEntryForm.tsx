@@ -108,7 +108,7 @@ const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
         display: "grid",
         gap: "1em",
         border: "2px",
-        padding: "1em",
+        padding: "4em",
       }}
     >
       {error && <Alert severity="error">{error}</Alert>}
@@ -158,7 +158,7 @@ const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
       )}
 
       {entryType && (
-        <Grid container justifyContent="space-between">
+        <Grid marginTop={"2em"} container justifyContent="space-between">
           <Button variant="contained" type="submit">
             SUBMIT
           </Button>
