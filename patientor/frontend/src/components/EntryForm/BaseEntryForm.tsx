@@ -1,4 +1,4 @@
-import { TextField, MenuItem, Autocomplete } from "@mui/material";
+import { TextField, MenuItem, Autocomplete, Chip } from "@mui/material";
 import { Controller, Control, FieldErrors } from "react-hook-form";
 import type {
   EntryFormValues,
@@ -102,6 +102,15 @@ const BaseEntryForm = ({
             onChange={(_, newValue) => onChange(newValue.map((v) => v.code))}
             getOptionLabel={(option) => `${option.code} - ${option.name}`}
             isOptionEqualToValue={(option, val) => option.code === val.code}
+            renderValue={(selectedOptions, getTagProps) =>
+              selectedOptions.map((option, index) => (
+                <Chip
+                  {...getTagProps({ index })}
+                  key={option.code}
+                  label={option.code}
+                />
+              ))
+            }
             renderInput={(params) => (
               <TextField
                 {...params}
