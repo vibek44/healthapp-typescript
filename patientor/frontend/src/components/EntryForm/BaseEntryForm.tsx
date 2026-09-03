@@ -99,10 +99,14 @@ const BaseEntryForm = ({
             multiple
             options={diagnoses}
             value={diagnoses.filter((d) => (value || []).includes(d.code))}
-            onChange={(_, newValue) => onChange(newValue.map((v) => v.code))}
+            onChange={(_, newValue) => onChange(newValue.map((v) => v.code))} //newValue is an array of selected option and from newValue only array of code is set as RHF value  //outer On Change is AutoComplete prop and inner onChange is controller's or RHF setState function
             getOptionLabel={(option) => `${option.code} - ${option.name}`}
             isOptionEqualToValue={(option, val) => option.code === val.code}
-            renderValue={(selectedOptions, getTagProps) =>
+            renderValue={(
+              // renderValue function define how selected options are displayed using Chips which get all props from helper getTagProps
+              selectedOptions,
+              getTagProps
+            ) =>
               selectedOptions.map((option, index) => (
                 <Chip
                   {...getTagProps({ index })}
@@ -112,7 +116,7 @@ const BaseEntryForm = ({
               ))
             }
             renderInput={(params) => (
-              <TextField
+              <TextField //Textfield is where Chips,delete button and Dropdown button is inserted
                 {...params}
                 label="Diagnosis Codes"
                 slotProps={{ inputLabel: { shrink: true } }}
