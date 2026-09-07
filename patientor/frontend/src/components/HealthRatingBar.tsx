@@ -1,7 +1,7 @@
-import { Rating } from '@mui/material';
-import { Favorite } from '@mui/icons-material';
+import { Rating } from "@mui/material";
+import { Favorite } from "@mui/icons-material";
 
-import { styled } from '@mui/material/styles';
+import { styled } from "@mui/material/styles";
 
 type BarProps = {
   rating: number;
@@ -9,12 +9,12 @@ type BarProps = {
 };
 
 const StyledRating = styled(Rating)({
-  iconFilled: {
+  "& .MuiRating-iconFilled": {
     color: "#ff6d75",
   },
-  iconHover: {
+  "& .MuiRating-iconHover": {
     color: "#ff3d47",
-  }
+  },
 });
 
 const HEALTHBAR_TEXTS = [
@@ -28,7 +28,6 @@ const HealthRatingBar = ({ rating, showText }: BarProps) => {
   return (
     <div className="health-bar">
       <StyledRating
-        readOnly
         value={4 - rating}
         max={4}
         icon={<Favorite fontSize="inherit" />}
