@@ -15,15 +15,17 @@ const App = () => {
   const lastFetchedId = useRef<string | null>(null);
 
   useEffect(() => {
-    const fetchPatientList = async () => {
-      const [patientsData, diagnosesData] = await Promise.all([
-        patientService.getAll(),
-        patientService.getDiagnoses(),
-      ]);
-      setPatients(patientsData);
-      setDiagnoses(diagnosesData);
-    };
-    void fetchPatientList();
+    try {
+      const fetchPatientList = async () => {
+        const [patientsData, diagnosesData] = await Promise.all([
+          patientService.getAll(),
+          patientService.getDiagnoses(),
+        ]);
+        setPatients(patientsData);
+        setDiagnoses(diagnosesData);
+      };
+      void fetchPatientList();
+    } catch (error) {}
   }, []);
   useEffect(() => {
     if (!patientId || patientId === lastFetchedId.current) return;
