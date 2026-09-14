@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { Route, Link, Routes, useMatch } from "react-router-dom";
-import { Button, Divider, Container, Typography } from "@mui/material";
+import { Button, Divider, Container, Typography, Alert } from "@mui/material";
 import { Patient, Diagnoses } from "./types";
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
@@ -10,22 +11,35 @@ const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [diagnoses, setDiagnoses] = useState<Diagnoses[]>([]);
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
+  const [error, setError] = useState<string>();
   const match = useMatch("/patients/:id");
   const patientId = match?.params?.id;
   const lastFetchedId = useRef<string | null>(null);
 
   useEffect(() => {
-    try {
-      const fetchPatientList = async () => {
+    const fetchPatientList = async () => {
+      try {
         const [patientsData, diagnosesData] = await Promise.all([
           patientService.getAll(),
           patientService.getDiagnoses(),
         ]);
         setPatients(patientsData);
         setDiagnoses(diagnosesData);
-      };
-      void fetchPatientList();
-    } catch (error) {}
+      } catch (e: unknown) {
+        if (axios.isAxiosError(e)) {
+          if (e.response) {
+            setError("Something went Wrong: Server error !");
+          }
+          if (e.request) {
+            setError(`Something went wrong: Network Error !`);
+          }
+        } else {
+          console.error("Unknown error", e);
+          setError("Unknown error");
+        }
+      }
+    };
+    void fetchPatientList();
   }, []);
   useEffect(() => {
     if (!patientId || patientId === lastFetchedId.current) return;
@@ -47,6 +61,7 @@ const App = () => {
   return (
     <div className="App">
       <Container>
+        {error && <Alert severity="error">{error}</Alert>}
         <Typography variant="h3" sx={{ marginBottom: "0.5em" }}>
           Patientor
         </Typography>
