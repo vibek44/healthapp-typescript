@@ -1,6 +1,11 @@
 import type { Request, Response, NextFunction } from "express";
 import z from "zod";
-const errorHandler = (
+
+export const unknownEndPoint = (_req: Request, res: Response) => {
+  res.status(404).send({ error: "Unknown endpoint, please check address" });
+};
+
+export const errorHandler = (
   error: unknown,
   _req: Request,
   res: Response,
@@ -14,5 +19,3 @@ const errorHandler = (
     next(error);
   }
 };
-
-export default errorHandler;
