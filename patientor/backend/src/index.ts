@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import cors from "cors";
 import diagnosesRouter from "./routes/diagnoses.ts";
 import patientsRouter from "./routes/patients.ts";
+import { unknownEndPoint } from "./middleware/errorHandler.ts";
 const app = express();
 app.use(cors());
 app.use(express.json());
@@ -15,7 +16,7 @@ app.use(express.static(path.join(__dirname, "../dist")));
 app.use("/api/diagnoses", diagnosesRouter);
 app.use("/api/patients", patientsRouter);
 
-//console.log(process);
+app.use(unknownEndPoint);
 app.listen(PORT, () => {
   console.log(`app running in port ${PORT}`);
 });
