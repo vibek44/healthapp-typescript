@@ -27,14 +27,14 @@ const App = () => {
         setDiagnoses(diagnosesData);
       } catch (e: unknown) {
         if (axios.isAxiosError(e)) {
-          if (e.response) {
+          if (e.code === "ECONNABORTED" && e.message.includes("timeout")) {
+            setError("Connection timeout");
+          } else if (e.response) {
             setError("Something went Wrong: Server error !");
-          }
-          if (e.request) {
+          } else if (e.request) {
             setError(`Something went wrong: Network Error !`);
           }
         } else {
-          console.error("Unknown error", e);
           setError("Unknown error");
         }
       }
