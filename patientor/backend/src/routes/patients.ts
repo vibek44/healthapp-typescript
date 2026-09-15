@@ -8,13 +8,14 @@ import {
   newPatientParser,
   patientEntryParser,
 } from "../middleware/entryParser.ts";
-import errorHandler from "../middleware/errorHandler.ts";
+import { errorHandler } from "../middleware/errorHandler.ts";
 import type {
   PatientEntry,
   Patient,
   ErrorType,
   NonSensitivePatientData,
   EntryNoId,
+  Entry,
 } from "../types.ts";
 // import type{ NewPatientEntry } from "../types.ts";
 
@@ -55,10 +56,10 @@ patientsRouter.post(
   patientEntryParser,
   (
     req: Request<{ id: string }, unknown, EntryNoId>,
-    res: Response,
+    res: Response<Entry | { error: string }>,
     _next: NextFunction
   ) => {
-    console.log(req.body);
+    //console.log(req.body);
     const result = patientsService.addPatientEntry(req.params.id, req.body);
     if (!result) {
       return res.status(400).send({ error: "Patient Entry not found" });
