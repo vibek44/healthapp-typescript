@@ -1,11 +1,13 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense, lazy } from "react";
+
 import axios from "axios";
 import { Route, Link, Routes, useMatch } from "react-router-dom";
 import { Button, Divider, Container, Typography, Alert } from "@mui/material";
 import { Patient, Diagnoses } from "./types";
 import patientService from "./services/patients";
 import PatientListPage from "./components/PatientListPage";
-import PatientInfoPage from "./components/PatientInfoPage";
+
+const PatientInfoPage = lazy(() => import("./components/PatientInfoPage"));
 
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
@@ -30,6 +32,7 @@ const App = () => {
           if (e.code === "ECONNABORTED" && e.message.includes("timeout")) {
             setError("Connection timeout");
           } else if (e.response) {
+            console.log(e.toJSON());
             setError("Something went Wrong: Server error !");
           } else if (e.request) {
             setError(`Something went wrong: Network Error !`);
@@ -73,11 +76,13 @@ const App = () => {
           <Route
             path="/patients/:id"
             element={
-              <PatientInfoPage
-                setPatient={setPatient}
-                patient={patient}
-                diagnoses={diagnoses}
-              />
+              <Suspense fallback={<b>InfoPage loading...</b>}>
+                <PatientInfoPage
+                  setPatient={setPatient}
+                  patient={patient}
+                  diagnoses={diagnoses}
+                />
+              </Suspense>
             }
           />
 
