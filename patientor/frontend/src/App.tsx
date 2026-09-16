@@ -49,16 +49,16 @@ const App = () => {
     let isActive = true;
     lastFetchedId.current = patientId;
     const fetchPatientInfo = async () => {
-      console.log("match run eff1");
       const patientDetail = await patientService.getIndividualPatientData(
         patientId
       );
       if (isActive) setPatient(patientDetail);
     };
     void fetchPatientInfo();
-    console.log("1eff");
     return () => {
       isActive = false;
+      setPatient(undefined);
+      lastFetchedId.current = null;
     };
   }, [patientId]);
   return (
