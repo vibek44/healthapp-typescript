@@ -2,7 +2,7 @@ import type { Request, Response, NextFunction } from "express";
 import z from "zod";
 
 export const unknownEndPoint = (_req: Request, res: Response) => {
-  res.status(404).send({ error: "Unknown endpoint, please check address" });
+  res.status(404).send({ error: "Unknown endpoint, page not found 404!" });
 };
 
 export const errorHandler = (
