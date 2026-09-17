@@ -1,25 +1,65 @@
+import { useEffect } from "react";
+import { useParams } from "react-router-dom";
+import patientService from "../../services/patients";
 import type { Patient, Diagnoses } from "../../types";
-import { Button, Card, Divider, Paper, Typography, Grid } from "@mui/material";
+import {
+  Button,
+  Card,
+  Divider,
+  Paper,
+  Typography,
+  Grid,
+  Alert,
+} from "@mui/material";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
-import TransGenderIcon from "@mui/icons-material/Female";
+import TransGenderIcon from "@mui/icons-material/Transgender";
 import EntryDetails from "./EntryDetails";
 import AddEntryModal from "../EntryForm";
 import { useState } from "react";
+import axios from "axios";
 interface PatientProps {
-  patient: Patient | undefined;
   diagnoses: Diagnoses[];
-  setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
 }
-const PatientInfoPage = ({ patient, diagnoses, setPatient }: PatientProps) => {
-  if (!patient) return null;
+const PatientInfoPage = ({ diagnoses }: PatientProps) => {
+  const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const [modalState, setModalState] = useState<boolean>(false);
+  const { id } = useParams<{ id: string }>();
+  const [error, setError] = useState<string>();
+
+  useEffect(() => {
+    if (!id) return;
+    let isActive = true;
+    const fetchPatientInfo = async () => {
+      try {
+        const patientDetail = await patientService.getIndividualPatientData(id);
+        if (isActive) setPatient(patientDetail);
+      } catch (error: unknown) {
+        if (axios.isAxiosError(error)) {
+          if (isActive && error.code == "ECONNABORTED") {
+            setError("timeout error!");
+          } else if (isActive && error.response) {
+            setError("Server error!");
+          } else {
+            setError("Network error!");
+          }
+        }
+      }
+    };
+    void fetchPatientInfo();
+    return () => {
+      isActive = false;
+    };
+  }, [id]);
+
   const onModalClose = () => {
     setModalState(false);
   };
   const onModalOpen = () => {
     setModalState(true);
   };
+  if (error) return <Alert severity="error">{error}</Alert>;
+  if (!patient) return null;
 
   return (
     <Card sx={{ width: "50em", padding: "1em", margin: "auto" }}>
