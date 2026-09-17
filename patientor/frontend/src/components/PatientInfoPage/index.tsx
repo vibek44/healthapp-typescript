@@ -59,7 +59,7 @@ const PatientInfoPage = ({ diagnoses }: PatientProps) => {
     setModalState(true);
   };
   if (error) return <Alert severity="error">{error}</Alert>;
-  if (!patient) return null;
+  if (!patient) return <Typography>Patient not available</Typography>;
 
   return (
     <Card sx={{ width: "50em", padding: "1em", margin: "auto" }}>
