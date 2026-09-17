@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef, Suspense, lazy } from "react";
-
+import { useState, useEffect, Suspense, lazy } from "react";
 import axios from "axios";
-import { Route, Link, Routes, useMatch } from "react-router-dom";
+import { Route, Link, Routes } from "react-router-dom";
 import { Button, Divider, Container, Typography, Alert } from "@mui/material";
 import { Patient, Diagnoses } from "./types";
 import patientService from "./services/patients";
@@ -12,12 +11,7 @@ const PatientInfoPage = lazy(() => import("./components/PatientInfoPage"));
 const App = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [diagnoses, setDiagnoses] = useState<Diagnoses[]>([]);
-  const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const [error, setError] = useState<string>();
-  const match = useMatch("/patients/:id");
-  const patientId = match?.params?.id;
-  const lastFetchedId = useRef<string | null>(null);
-
   useEffect(() => {
     const fetchPatientList = async () => {
       try {
@@ -44,23 +38,7 @@ const App = () => {
     };
     void fetchPatientList();
   }, []);
-  useEffect(() => {
-    if (!patientId || patientId === lastFetchedId.current) return;
-    let isActive = true;
-    lastFetchedId.current = patientId;
-    const fetchPatientInfo = async () => {
-      const patientDetail = await patientService.getIndividualPatientData(
-        patientId
-      );
-      if (isActive) setPatient(patientDetail);
-    };
-    void fetchPatientInfo();
-    return () => {
-      isActive = false;
-      setPatient(undefined);
-      lastFetchedId.current = null;
-    };
-  }, [patientId]);
+
   return (
     <div className="App">
       <Container>
@@ -77,15 +55,10 @@ const App = () => {
             path="/patients/:id"
             element={
               <Suspense fallback={<b>InfoPage loading...</b>}>
-                <PatientInfoPage
-                  setPatient={setPatient}
-                  patient={patient}
-                  diagnoses={diagnoses}
-                />
+                <PatientInfoPage diagnoses={diagnoses} />
               </Suspense>
             }
           />
-
           <Route
             path="/"
             element={
