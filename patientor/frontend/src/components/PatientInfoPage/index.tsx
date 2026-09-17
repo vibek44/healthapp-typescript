@@ -10,6 +10,7 @@ import {
   Typography,
   Grid,
   Alert,
+  CircularProgress,
 } from "@mui/material";
 import MaleIcon from "@mui/icons-material/Male";
 import FemaleIcon from "@mui/icons-material/Female";
@@ -24,6 +25,7 @@ interface PatientProps {
 const PatientInfoPage = ({ diagnoses }: PatientProps) => {
   const [patient, setPatient] = useState<Patient | undefined>(undefined);
   const [modalState, setModalState] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const { id } = useParams<{ id: string }>();
   const [error, setError] = useState<string>();
 
@@ -31,6 +33,7 @@ const PatientInfoPage = ({ diagnoses }: PatientProps) => {
     if (!id) return;
     let isActive = true;
     const fetchPatientInfo = async () => {
+      console.log("run infopage eff");
       try {
         const patientDetail = await patientService.getIndividualPatientData(id);
         if (isActive) setPatient(patientDetail);
@@ -39,11 +42,19 @@ const PatientInfoPage = ({ diagnoses }: PatientProps) => {
           if (isActive && error.code == "ECONNABORTED") {
             setError("timeout error!");
           } else if (isActive && error.response) {
+            if (error.response.status === 404) {
+              setError("Patient not found!");
+              return;
+            }
             setError("Server error!");
           } else {
             setError("Network error!");
           }
+        } else {
+          setError("Unexpected error!");
         }
+      } finally {
+        if (isActive) setLoading(false);
       }
     };
     void fetchPatientInfo();
@@ -59,6 +70,8 @@ const PatientInfoPage = ({ diagnoses }: PatientProps) => {
     setModalState(true);
   };
   if (error) return <Alert severity="error">{error}</Alert>;
+  if (loading)
+    return <CircularProgress sx={{ display: "block", margin: "2em auto" }} />;
   if (!patient) return <Typography>Patient not available</Typography>;
 
   return (
