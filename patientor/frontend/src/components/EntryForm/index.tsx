@@ -4,7 +4,7 @@ import type { Patient, Diagnoses } from "../../types";
 interface AddEntryProps {
   open: boolean;
   onClose: () => void;
-  patient: Patient;
+  id: string;
   setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
   diagnoses: Diagnoses[];
 }
@@ -12,7 +12,7 @@ interface AddEntryProps {
 const AddEntryModal = ({
   open,
   onClose,
-  patient,
+  id,
   setPatient,
   diagnoses,
 }: AddEntryProps) => {
@@ -22,7 +22,7 @@ const AddEntryModal = ({
       <Divider sx={{ marginTop: "0.5em" }} />
       <AddEntryForm
         onClose={onClose}
-        patient={patient}
+        id={id}
         setPatient={setPatient}
         diagnoses={diagnoses}
       />
