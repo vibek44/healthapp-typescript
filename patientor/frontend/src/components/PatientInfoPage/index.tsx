@@ -91,14 +91,15 @@ const PatientInfoPage = ({ diagnoses }: PatientProps) => {
         <Typography>Occupation: {patient.occupation}</Typography>
         <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
         <Divider sx={{ marginY: "1em" }} />
-
-        <AddEntryModal
-          open={modalState}
-          onClose={onModalClose}
-          diagnoses={diagnoses}
-          patient={patient}
-          setPatient={setPatient}
-        />
+        {id && (
+          <AddEntryModal
+            open={modalState}
+            onClose={onModalClose}
+            diagnoses={diagnoses}
+            id={id}
+            setPatient={setPatient}
+          />
+        )}
         <Button
           variant="contained"
           sx={{ marginX: "auto" }}
