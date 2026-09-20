@@ -19,13 +19,13 @@ interface Error {
   path: string[];
 }
 interface Props {
-  patient: Patient;
+  id: string;
   setPatient: React.Dispatch<React.SetStateAction<Patient | undefined>>;
   onClose: () => void;
   diagnoses: Diagnoses[];
 }
 
-const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
+const AddEntryForm = ({ onClose, diagnoses, id, setPatient }: Props) => {
   const [error, setError] = useState<string[] | string | undefined>(undefined);
   const {
     control,
@@ -38,6 +38,7 @@ const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
   });
   const entryType = watch("type");
   const onSubmit = async (data: EntryFormValues) => {
+    console.log("ok", id);
     try {
       if (data.type === "Hospital") {
         const { dischargeDate, criteria, ...rest } = data;
@@ -45,12 +46,12 @@ const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
           ...rest,
           discharge: { date: dischargeDate, criteria },
         };
-        const result = await patientService.createEntry(
-          hospitalData,
-          patient.id
-        );
+        const result = await patientService.createEntry(hospitalData, id);
 
-        setPatient({ ...patient, entries: [...patient.entries, result] });
+        setPatient((prev) => {
+          if (!prev) return undefined;
+          return { ...prev, entries: [...prev.entries, result] };
+        });
         onClose();
         return;
       }
@@ -60,17 +61,20 @@ const AddEntryForm = ({ onClose, diagnoses, patient, setPatient }: Props) => {
           ...rest,
           sickLeave: { startDate, endDate },
         };
-        const result = await patientService.createEntry(
-          occupationalData,
-          patient.id
-        );
-        setPatient({ ...patient, entries: [...patient.entries, result] });
+        const result = await patientService.createEntry(occupationalData, id);
+        setPatient((prev) => {
+          if (!prev) return undefined;
+          return { ...prev, entries: [...prev.entries, result] };
+        });
         onClose();
         return;
       }
       if (data.type === "HealthCheck") {
-        const result = await patientService.createEntry(data, patient.id);
-        setPatient({ ...patient, entries: [...patient.entries, result] });
+        const result = await patientService.createEntry(data, id);
+        setPatient((prev) => {
+          if (!prev) return undefined;
+          return { ...prev, entries: [...prev.entries, result] };
+        });
         onClose();
         return;
       }
