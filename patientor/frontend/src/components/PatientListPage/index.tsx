@@ -8,6 +8,7 @@ import {
   TableCell,
   TableRow,
   TableBody,
+  Divider,
 } from "@mui/material";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -74,10 +75,11 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
   return (
     <div className="App">
       <Box>
-        <Typography align="center" variant="h6">
+        <Typography align="center" color="dark-grey" variant="h4">
           Patient list
         </Typography>
       </Box>
+      <Divider sx={{ marginY: 2 }} />
       <Table sx={{ marginBottom: "1em" }}>
         <TableHead>
           <TableRow>
@@ -91,7 +93,12 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
           {patients.map((patient: Patient) => (
             <TableRow key={patient.id}>
               <TableCell>
-                <Link to={`/patients/${patient.id}`}>{patient.name} </Link>
+                <Link
+                  to={`/patients/${patient.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {patient.name}{" "}
+                </Link>
               </TableCell>
               <TableCell>{patient.gender}</TableCell>
               <TableCell>{patient.occupation}</TableCell>
