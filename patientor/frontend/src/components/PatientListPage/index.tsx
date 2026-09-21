@@ -83,10 +83,10 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
       <Table sx={{ marginBottom: "1em" }}>
         <TableHead>
           <TableRow>
-            <TableCell>Name</TableCell>
-            <TableCell>Gender</TableCell>
-            <TableCell>Occupation</TableCell>
-            <TableCell>Health Rating</TableCell>
+            <TableCell style={{ fontSize: "1.3em" }}>Name</TableCell>
+            <TableCell style={{ fontSize: "1.3em" }}>Gender</TableCell>
+            <TableCell style={{ fontSize: "1.3em" }}>Occupation</TableCell>
+            <TableCell style={{ fontSize: "1.3em" }}>Health Rating</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
