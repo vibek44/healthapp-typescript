@@ -5,8 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "tsc": "tsc",
-    "start": "tsc && node --experimental-transform-types ./src/index.ts",
+    "build": "tsc --noEmit false",
+    "start": "node build/index.js",
+    "start1": "tsc && node --experimental-transform-types ./src/index.ts",
     "dev": "concurrently \"tsc --watch\" \"node --watch ./src/index.ts\"",
     "lint": "eslint .",
     "test": "echo \"Error: no test specified\" && exit 1",
