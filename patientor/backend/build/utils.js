@@ -1,0 +1,173 @@
+import { HealthCheckRating, } from "./typesusingtypescript.ts";
+const isString = (text) => {
+    return typeof text === "string";
+};
+const isDate = (date1, date2 = undefined) => {
+    if (!date2)
+        return Boolean(Date.parse(date1));
+    const parsedDate1 = Date.parse(date1);
+    const parsedDate2 = Date.parse(date2);
+    if (Boolean(parsedDate1) &&
+        Boolean(parsedDate2) &&
+        parsedDate2 > parsedDate1) {
+        return true;
+    }
+    throw new Error("Incorrect startDate or endDate");
+};
+const parseDiagnosisCodes = (codes) => {
+    if (Array.isArray(codes) &&
+        codes.length > 0 &&
+        codes.every((code) => typeof code === "string")) {
+        return codes;
+    }
+    throw new Error("Incorrect or missing diagnosis code");
+};
+const parseSickLeave = (sickLeave) => {
+    if (sickLeave &&
+        typeof sickLeave === "object" &&
+        Object.keys(sickLeave).length === 2 &&
+        "startDate" in sickLeave &&
+        "endDate" in sickLeave) {
+        if (isString(sickLeave.startDate) &&
+            isString(sickLeave.endDate) &&
+            isDate(sickLeave.startDate, sickLeave.endDate)) {
+            return {
+                startDate: sickLeave.startDate,
+                endDate: sickLeave.endDate,
+            };
+        }
+    }
+    throw new Error("invalid start and end date");
+};
+const isHealthCheckRating = (rating) => {
+    return Object.values(HealthCheckRating).includes(rating);
+};
+const parseRating = (rating) => {
+    if (typeof rating === "number" && isHealthCheckRating(rating)) {
+        return rating;
+    }
+    throw new Error("invalid Healthcheck rating");
+};
+const parseDate = (text) => {
+    if (!isString(text) || !isDate(text)) {
+        throw new Error("Incorrect or missing date content");
+    }
+    return text;
+};
+const parseString = (str) => {
+    if (!isString(str))
+        throw new Error(`invalid entry :${str}`);
+    return str;
+};
+const parseDischarge = (discharge) => {
+    if (typeof discharge === "object" &&
+        discharge !== null &&
+        "date" in discharge &&
+        "criteria" in discharge) {
+        if (isString(discharge.date) &&
+            isString(discharge.criteria) &&
+            isDate(discharge.date)) {
+            return {
+                date: discharge.date,
+                criteria: discharge.criteria,
+            };
+        }
+    }
+    throw new Error("invalid discharge entry");
+};
+const parseOccupationalEntry = (entry) => {
+    if ("type" in entry &&
+        entry.type === "OccupationalHealthcare" &&
+        "description" in entry &&
+        "employerName" in entry &&
+        "date" in entry &&
+        "specialist" in entry) {
+        const newEntry = {
+            type: entry.type,
+            description: parseString(entry.description),
+            specialist: parseString(entry.specialist),
+            employerName: parseString(entry.employerName),
+            date: parseDate(entry.date),
+            ...(entry.diagnosisCodes
+                ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
+                : {}),
+            ...(entry.sickLeave
+                ? { sickLeave: parseSickLeave(entry.sickLeave) }
+                : {}),
+        };
+        return newEntry;
+    }
+    throw new Error("Invalid OccupationalHealthcare entry");
+};
+const parseHealthCheckEntry = (entry) => {
+    if ("type" in entry &&
+        entry.type === "HealthCheck" &&
+        "description" in entry &&
+        "healthCheckRating" in entry &&
+        "date" in entry &&
+        "specialist" in entry) {
+        const newEntry = {
+            type: entry.type,
+            description: parseString(entry.description),
+            specialist: parseString(entry.specialist),
+            healthCheckRating: parseRating(entry.healthCheckRating),
+            date: parseDate(entry.date),
+            ...(entry.diagnosisCodes
+                ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
+                : {}),
+        };
+        return newEntry;
+    }
+    throw new Error("Invalid Healthcheck entry");
+};
+const parseHospitalEntry = (entry) => {
+    if ("type" in entry &&
+        entry.type === "Hospital" &&
+        "description" in entry &&
+        "discharge" in entry &&
+        "date" in entry &&
+        "specialist" in entry) {
+        const newEntry = {
+            type: entry.type,
+            description: parseString(entry.description),
+            specialist: parseString(entry.specialist),
+            discharge: parseDischarge(entry.discharge),
+            date: parseDate(entry.date),
+            ...(entry.diagnosisCodes
+                ? { diagnosisCodes: parseDiagnosisCodes(entry.diagnosisCodes) }
+                : {}),
+        };
+        return newEntry;
+    }
+    throw new Error("Invalid Hospital entry");
+};
+const isEntry = (e) => {
+    if (typeof e !== "object" || e === null)
+        return false;
+    return ("type" in e &&
+        typeof e.type === "string" &&
+        (e.type === "HealthCheck" ||
+            e.type === "OccupationalHealthcare" ||
+            e.type === "Hospital"));
+};
+const assertNever = (entry) => {
+    throw new Error(`unhandle cases or extra cases not handled  ${entry} `);
+};
+export const parseNewEntry = (entry) => {
+    if (!entry || typeof entry !== "object" || Object.keys(entry).length === 0) {
+        throw new Error("No entry data provided");
+    }
+    if (isEntry(entry)) {
+        switch (entry.type) {
+            case "OccupationalHealthcare":
+                return parseOccupationalEntry(entry);
+            case "HealthCheck":
+                return parseHealthCheckEntry(entry);
+            case "Hospital":
+                return parseHospitalEntry(entry);
+            default:
+                return assertNever(entry);
+        }
+    }
+    throw new Error("Invalid entry: missing or invalid 'type' field");
+};
