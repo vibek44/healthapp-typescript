@@ -1,7 +1,7 @@
-import diagnosesData from "../data/diagnoses.ts";
+import diagnosesData from "../data/diagnoses.js";
 const getDiagnosesData = () => {
-    return diagnosesData;
+  return diagnosesData;
 };
 export default {
-    getDiagnosesData,
+  getDiagnosesData,
 };
