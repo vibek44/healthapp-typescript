@@ -75,55 +75,53 @@ const PatientInfoPage = ({ diagnoses }: PatientProps) => {
   if (!patient) return <Typography>Patient not available</Typography>;
 
   return (
-    <Card sx={{ width: "50em", padding: "1em", margin: "auto" }}>
-      <Grid container rowSpacing={2} direction="column">
-        <Typography sx={{ my: 1 }} variant="h5">
-          {patient.name}
-          {patient.gender === "male" ? (
-            <MaleIcon sx={{ mx: 1 }} />
-          ) : patient.gender === "female" ? (
-            <FemaleIcon sx={{ mx: 1 }} />
-          ) : (
-            <TransGenderIcon sx={{ mx: 1 }} />
-          )}
-        </Typography>
-        <Typography>ssn: {patient.ssn}</Typography>
-        <Typography>Occupation: {patient.occupation}</Typography>
-        <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
-        <Divider sx={{ marginY: "1em" }} />
-        {id && (
-          <AddEntryModal
-            open={modalState}
-            onClose={onModalClose}
-            diagnoses={diagnoses}
-            id={id}
-            setPatient={setPatient}
-          />
+    <Grid container rowSpacing={2} direction="column">
+      <Typography sx={{ my: 1 }} variant="h5">
+        {patient.name}
+        {patient.gender === "male" ? (
+          <MaleIcon sx={{ mx: 1 }} />
+        ) : patient.gender === "female" ? (
+          <FemaleIcon sx={{ mx: 1 }} />
+        ) : (
+          <TransGenderIcon sx={{ mx: 1 }} />
         )}
-        <Button
-          variant="contained"
-          sx={{ marginX: "auto" }}
-          onClick={onModalOpen}
-        >
-          CREATE NEW ENTRY
-        </Button>
+      </Typography>
+      <Typography>ssn: {patient.ssn}</Typography>
+      <Typography>Occupation: {patient.occupation}</Typography>
+      <Typography>Date of Birth: {patient.dateOfBirth}</Typography>
+      <Divider sx={{ marginY: "1em" }} />
+      {id && (
+        <AddEntryModal
+          open={modalState}
+          onClose={onModalClose}
+          diagnoses={diagnoses}
+          id={id}
+          setPatient={setPatient}
+        />
+      )}
+      <Button
+        variant="contained"
+        sx={{ marginX: "auto" }}
+        onClick={onModalOpen}
+      >
+        CREATE NEW ENTRY
+      </Button>
 
-        <Typography variant="h6" sx={{ marginY: 5 }}>
-          Entries
-        </Typography>
-        <Typography variant="subtitle1">
-          {patient.entries.map((el) => (
-            <Paper
-              key={el.id}
-              variant="elevation"
-              sx={{ border: "solid", margin: 2, paddingLeft: 1 }}
-            >
-              <EntryDetails entry={el} diagnoses={diagnoses} />
-            </Paper>
-          ))}
-        </Typography>
-      </Grid>
-    </Card>
+      <Typography variant="h6" sx={{ marginY: 5 }}>
+        Entries
+      </Typography>
+      <Typography variant="subtitle1">
+        {patient.entries.map((el) => (
+          <Paper
+            key={el.id}
+            variant="elevation"
+            sx={{ border: "solid", margin: 2, paddingLeft: 1 }}
+          >
+            <EntryDetails entry={el} diagnoses={diagnoses} />
+          </Paper>
+        ))}
+      </Typography>
+    </Grid>
   );
 };
 
