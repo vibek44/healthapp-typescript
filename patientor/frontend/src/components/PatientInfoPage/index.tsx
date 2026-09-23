@@ -4,7 +4,6 @@ import patientService from "../../services/patients";
 import type { Patient, Diagnoses } from "../../types";
 import {
   Button,
-  Card,
   Divider,
   Paper,
   Typography,
