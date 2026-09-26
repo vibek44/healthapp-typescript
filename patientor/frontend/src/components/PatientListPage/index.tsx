@@ -9,6 +9,7 @@ import {
   TableRow,
   TableBody,
   Divider,
+  TableContainer,
 } from "@mui/material";
 import axios from "axios";
 import { Link } from "react-router-dom";
@@ -66,7 +67,6 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
           setError("Unrecognized axios error");
         }
       } else {
-        console.error("Unknown error", e);
         setError("Unknown error");
       }
     }
@@ -80,35 +80,37 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
         </Typography>
       </Box>
       <Divider sx={{ marginY: 2 }} />
-      <Table sx={{ marginBottom: "1em" }}>
-        <TableHead>
-          <TableRow>
-            <TableCell style={{ fontSize: "1.3em" }}>Name</TableCell>
-            <TableCell style={{ fontSize: "1.3em" }}>Gender</TableCell>
-            <TableCell style={{ fontSize: "1.3em" }}>Occupation</TableCell>
-            <TableCell style={{ fontSize: "1.3em" }}>Health Rating</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {patients.map((patient: Patient) => (
-            <TableRow key={patient.id}>
-              <TableCell>
-                <Link
-                  to={`/patients/${patient.id}`}
-                  style={{ textDecoration: "none" }}
-                >
-                  {patient.name}{" "}
-                </Link>
-              </TableCell>
-              <TableCell>{patient.gender}</TableCell>
-              <TableCell>{patient.occupation}</TableCell>
-              <TableCell>
-                <HealthRatingBar showText={false} rating={1} />
-              </TableCell>
+      <TableContainer>
+        <Table sx={{ marginBottom: "1em" }}>
+          <TableHead>
+            <TableRow>
+              <TableCell style={{ fontSize: "1.3em" }}>Name</TableCell>
+              <TableCell style={{ fontSize: "1.3em" }}>Gender</TableCell>
+              <TableCell style={{ fontSize: "1.3em" }}>Occupation</TableCell>
+              <TableCell style={{ fontSize: "1.3em" }}>Health Rating</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHead>
+          <TableBody>
+            {patients.map((patient: Patient) => (
+              <TableRow key={patient.id}>
+                <TableCell>
+                  <Link
+                    to={`/patients/${patient.id}`}
+                    style={{ textDecoration: "none" }}
+                  >
+                    {patient.name}{" "}
+                  </Link>
+                </TableCell>
+                <TableCell>{patient.gender}</TableCell>
+                <TableCell>{patient.occupation}</TableCell>
+                <TableCell>
+                  <HealthRatingBar showText={false} rating={1} />
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       <AddPatientModal
         modalOpen={modalOpen}
         onSubmit={submitNewPatient}
