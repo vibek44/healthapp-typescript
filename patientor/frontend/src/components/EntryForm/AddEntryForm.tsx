@@ -112,18 +112,13 @@ const AddEntryForm = ({ onClose, diagnoses, id, setPatient }: Props) => {
         display: "grid",
         gap: "1em",
         border: "2px",
-        padding: "4em",
+        padding: "2em",
       }}
     >
       {error && <Alert severity="error">{error}</Alert>}
 
       {entryType && (
-        <Typography
-          sx={{ margin: "auto" }}
-          variant="subtitle1"
-          color="info"
-          fontFamily="unset"
-        >
+        <Typography variant="subtitle1" color="info" fontFamily="unset">
           Field with * are required
         </Typography>
       )}
@@ -162,10 +157,11 @@ const AddEntryForm = ({ onClose, diagnoses, id, setPatient }: Props) => {
       )}
 
       {entryType && (
-        <Grid marginTop={"2em"} container justifyContent="space-between">
-          <Button variant="contained" type="submit">
+        <Grid marginTop={1} container justifyContent="space-between">
+          <Button variant="contained" type="submit" sx={{ marginBottom: 1 }}>
             SUBMIT
           </Button>
+
           <Button
             onClick={onClose} //handleVisibility
             variant="contained"
