@@ -80,7 +80,7 @@ const PatientListPage = ({ patients, setPatients }: Props) => {
         </Typography>
       </Box>
       <Divider sx={{ marginY: 2 }} />
-      <TableContainer>
+      <TableContainer sx={{ marginBottom: 1 }}>
         <Table sx={{ marginBottom: "1em" }}>
           <TableHead>
             <TableRow>
